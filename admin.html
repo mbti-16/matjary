@@ -899,13 +899,52 @@
             formContainer.style.transform = 'translateY(100%)';
         });
         
-        // منع إرسال النماذج (لأغراض العرض فقط)
-        document.querySelectorAll('form').forEach(form => {
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                alert('تم إرسال النموذج بنجاح!');
-            });
+        // التحقق الأولي من حالة المصادقة
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            if (session) {
+                showDashboard();
+                fetchMessages(); 
+            } else {
+                showLogin();
+            }
         });
+        
+        function showDashboard() {
+            if(loginContainer && dashboardContainer) {
+                loginContainer.style.display = 'none';
+                dashboardContainer.style.display = 'block';
+            }
+        }
+        
+        function showLogin() {
+             if(loginContainer && dashboardContainer) {
+                loginContainer.style.display = 'block';
+                dashboardContainer.style.display = 'none';
+            }
+        }
+
+        // تسجيل الدخول باستخدام Supabase Auth
+        if (loginForm) {
+            loginForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const email = document.getElementById('login-email').value;
+                const password = document.getElementById('login-password').value;
+
+                // يجب التأكد من إنشاء مستخدم في Supabase Auth أولاً
+                const { error } = await supabase.auth.signInWithPassword({
+                    email: email,
+                    password: password,
+                });
+                
+                if (error) {
+                    alert("فشل تسجيل الدخول: " + error.message);
+                    console.error("Login Error: ", error);
+                } else {
+                    showDashboard();
+                    fetchMessages();
+                }
+            });
+        }
     </script>
 </body>
 </html>
