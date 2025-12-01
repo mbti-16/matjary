@@ -1,3 +1,13 @@
+// ====== تهيئة Supabase ======
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+
+const supabaseUrl = 'https://bmehblfgoxxbokiqvojb.supabase.co';
+// يجب استخدام المفتاح العام (Anon Key) هنا بدلاً من المفتاح السري!
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJtZWhibGZnb3h4Ym9raXF2b2piIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQxMTA1NzYsImV4cCI6MjA3OTY4NjU3Nn0.CJKGad9xl5ZZv-hHkc0Ot3yLEsHyGfb-R3yfm5p_mfc'; //Placeholder
+
+const supabase = createClient(supabaseUrl, supabaseKey);
+// =============================
+
 // نظام إدارة المتجر الإلكتروني المتكامل مع Supabase
 class ECommerceStore {
     constructor() {
