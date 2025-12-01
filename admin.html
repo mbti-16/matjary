@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://bmehblfgoxxbokiqvojb.supabase.co; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline';">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <title>متجري - نظام إدارة المتجر الإلكتروني</title>
+    <link rel="stylesheet" href="admin.css">
+    <script type="module" src="admin.js" defer></script>
+</head>
+  <title>نموذج تسجيل الدخول والإنشاء</title>
+    <style>
+        /* التنسيقات العامة */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 450px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        /* تنسيقات الشكل الخارجي */
+        .form-container {
+            padding: 40px 30px;
+            transition: transform 0.6s ease-in-out;
+        }
+        
+        .welcome-section {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+        
+        .welcome-section h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .welcome-section p {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+        
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn-primary {
+            background-color: white;
+            color: #2c3e50;
+        }
+        
+        .btn-secondary {
+            background-color: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* تنسيقات النماذج */
+        .form {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .form.active {
+            display: block;
+        }
+        
+        .form h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+            font-size: 24px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 14px 15px;
+            border: 2px solid #e1e1e1;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            border-color: #6a11cb;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.1);
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .back-btn {
+            background: none;
+            border: none;
+            color: #6a11cb;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .back-btn:hover {
+            color: #2575fc;
+        }
+        
+        .back-btn i {
+            margin-right: 5px;
+        }
+        
+        /* تأثيرات الحركة */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* تنسيقات الاستجابة للشاشات المختلفة */
+        @media (max-width: 480px) {
+            .container {
+                max-width: 100%;
+            }
+            
+            .form-container {
+                padding: 30px 20px;
+            }
+            
+            .button-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="welcome-section">
+            <h1>مرحباً بك!</h1>
+            <p>انضم إلينا للاستفادة من جميع المزايا</p>
+            <div class="button-group">
+                <button class="btn btn-primary" id="loginBtn">تسجيل الدخول</button>
+                <button class="btn btn-secondary" id="signupBtn">إنشاء حساب</button>
+            </div>
+        </div>
+        
+        <div class="form-container">
+            <!-- نموذج تسجيل الدخول -->
+            <div class="form" id="loginForm">
+                <button class="back-btn" id="backFromLogin">
+                    <i>←</i> العودة
+                </button>
+                <h2>تسجيل الدخول</h2>
+                <form>
+                    <div class="form-group">
+                        <label for="loginEmail">البريد الإلكتروني</label>
+                        <input type="email" class="form-control" id="loginEmail" placeholder="أدخل بريدك الإلكتروني" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">كلمة المرور</label>
+                        <input type="password" class="form-control" id="loginPassword" placeholder="أدخل كلمة المرور" required>
+                    </div>
+                    <button type="submit" class="submit-btn">تسجيل الدخول</button>
+                </form>
+            </div>
+            
+            <!-- نموذج إنشاء حساب -->
+            <div class="form" id="signupForm">
+                <button class="back-btn" id="backFromSignup">
+                    <i>←</i> العودة
+                </button>
+                <h2>إنشاء حساب جديد</h2>
+                <form>
+                    <div class="form-group">
+                        <label for="signupName">الاسم الكامل</label>
+                        <input type="text" class="form-control" id="signupName" placeholder="أدخل اسمك الكامل" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupEmail">البريد الإلكتروني</label>
+                        <input type="email" class="form-control" id="signupEmail" placeholder="أدخل بريدك الإلكتروني" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupPassword">كلمة المرور</label>
+                        <input type="password" class="form-control" id="signupPassword" placeholder="أنشئ كلمة مرور قوية" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">تأكيد كلمة المرور</label>
+                        <input type="password" class="form-control" id="confirmPassword" placeholder="أعد إدخال كلمة المرور" required>
+                    </div>
+                    <button type="submit" class="submit-btn">إنشاء حساب</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div id="admin-dashboard" style="display:none; padding: 40px 20px;">
+    <!-- التطبيق الرئيسي -->
+    <div id="app" class="app-container">
+        <!-- الشريط العلوي -->
+        <header class="header">
+            <div class="header-content">
+                <h1 class="logo">متجري</h1>
+                <div class="header-actions">
+                    <button class="cart-btn" id="cartButton">
+                        🛒 عربة التسوق
+                        <span class="cart-count">0</span>
+                    </button>
+                    <button class="notification-btn">
+                        <span class="notification-icon">🔔</span>
+                        <span class="notification-badge">0</span>
+                    </button>
+                    <div class="user-profile" id="userProfile">
+                        <span class="user-name">زائر</span>
+                        <div class="user-avatar">👤</div>
+                        <div class="user-menu">
+                            <a href="#" class="menu-item" data-target="customerDashboard">لوحة التحكم</a>
+                            <a href="#" class="menu-item" data-target="store">المتجر</a>
+                            <a href="#" class="menu-item" data-target="orders">طلباتي</a>
+                            <a href="#" class="menu-item" id="logoutBtn">تسجيل الخروج</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- المحتوى الرئيسي -->
+        <main class="main-content">
+            <!-- لوحة التحكم الرئيسية -->
+            <section id="dashboard" class="page active">
+                <div class="page-header">
+                    <h2>لوحة التحكم</h2>
+                    <div class="stats-overview">
+                        <div class="stat-card">
+                            <div class="stat-icon">💰</div>
+                            <div class="stat-info">
+                                <span class="stat-value" id="totalRevenue">0</span>
+                                <span class="stat-label">إجمالي الأرباح</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">📦</div>
+                            <div class="stat-info">
+                                <span class="stat-value" id="totalProducts">0</span>
+                                <span class="stat-label">المنتجات</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">👥</div>
+                            <div class="stat-info">
+                                <span class="stat-value" id="totalOrders">0</span>
+                                <span class="stat-label">الطلبات</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sections-grid">
+                    <div class="section-card" data-target="customers">
+                        <div class="section-icon customers">👥</div>
+                        <h3>العملاء</h3>
+                    </div>
+                    <div class="section-card" data-target="sales">
+                        <div class="section-icon sales">💰</div>
+                        <h3>المبيعات</h3>
+                    </div>
+                    <div class="section-card" data-target="inventory">
+                        <div class="section-icon inventory">📦</div>
+                        <h3>المخزون</h3>
+                    </div>
+                    <div class="section-card" data-target="alerts">
+                        <div class="section-icon alerts">⚠️</div>
+                        <h3>تنبيهات المخزون</h3>
+                    </div>
+                    <div class="section-card" data-target="reports">
+                        <div class="section-icon reports">📊</div>
+                        <h3>التقارير</h3>
+                    </div>
+                    <div class="section-card" data-target="products">
+                        <div class="section-icon products">📝</div>
+                        <h3>سجل المنتجات</h3>
+                    </div>
+                    <div class="section-card" data-target="purchases">
+                        <div class="section-icon purchases">🛒</div>
+                        <h3>المشتريات</h3>
+                    </div>
+                    <div class="section-card" data-target="store">
+                        <div class="section-icon store">🛍️</div>
+                        <h3>المتجر</h3>
+                    </div>
+                    <div class="section-card" data-target="paymentSettings">
+                        <div class="section-icon payment">💳</div>
+                        <h3>إعدادات الدفع</h3>
+                    </div>
+                    <div class="section-card" data-target="shippingManagement">
+                        <div class="section-icon shipping">🚚</div>
+                        <h3>إدارة الشحن</h3>
+                    </div>
+                </div>
+            </section>
+
+            <!-- صفحة المتجر -->
+            <section id="store" class="page">
+                <div class="page-header">
+                    <button class="back-btn">← العودة</button>
+                    <h2>متجرنا</h2>
+                    <div class="store-actions">
+                        <div class="search-box">
+                            <input type="text" id="storeSearch" placeholder="ابحث عن منتج..." class="search-input">
+                            <span class="search-icon">🔍</span>
+                        </div>
+                        <button class="filter-btn" id="filterToggle">🔧 التصفية</button>
+                    </div>
+                </div>
+
+                <div class="store-container">
+                    <!-- شريط التصفية -->
+                    <div class="filter-sidebar" id="filterSidebar">
+                        <div class="filter-header">
+                            <h3>تصفية المنتجات</h3>
+                            <button class="close-filter" id="closeFilter">×</button>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <h4>الفئات</h4>
+                            <div class="filter-options">
+                                <label class="filter-option">
+                                    <input type="checkbox" name="category" value="electronics" checked>
+                                    <span class="checkmark"></span>
+                                    إلكترونيات
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox" name="category" value="clothing" checked>
+                                    <span class="checkmark"></span>
+                                    ملابس
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox" name="category" value="home" checked>
+                                    <span class="checkmark"></span>
+                                    منتجات منزلية
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="filter-group">
+                            <h4>السعر</h4>
+                            <div class="price-range">
+                                <input type="range" id="priceRange" min="0" max="5000" value="5000" class="range-slider">
+                                <div class="price-labels">
+                                    <span>0 ر.س</span>
+                                    <span id="maxPrice">5000 ر.س</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="filter-group">
+                            <h4>التوفر</h4>
+                            <label class="filter-option">
+                                <input type="checkbox" name="availability" value="in-stock" checked>
+                                <span class="checkmark"></span>
+                                متوفر في المخزون
+                            </label>
+                        </div>
+
+                        <button class="apply-filters" id="applyFilters">تطبيق التصفية</button>
+                    </div>
+
+                    <!-- منطقة المنتجات -->
+                    <div class="products-area">
+                        <div class="products-header">
+                            <div class="products-count">
+                                <span id="productsCount">0</span> منتج
+                            </div>
+                            <div class="sort-options">
+                                <select id="sortProducts" class="sort-select">
+                                    <option value="name">ترتيب أبجدي</option>
+                                    <option value="price-low">السعر: من الأقل للأعلى</option>
+                                    <option value="price-high">السعر: من الأعلى للأقل</option>
+                                    <option value="newest">الأحدث أولاً</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="products-grid" id="productsGrid">
+                            <!-- سيتم ملؤها ديناميكياً -->
+                        </div>
+
+                        <div class="load-more" id="loadMore">
+                            <button class="load-more-btn">تحميل المزيد</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- عربة التسوق -->
+            <section id="cart" class="page">
+                <div class="page-header">
+                    <button class="back-btn">← العودة</button>
+                    <h2>عربة التسوق</h2>
+                </div>
+
+                <div class="cart-container">
+                    <div class="cart-items" id="cartItems">
+                        <!-- سيتم ملؤها ديناميكياً -->
+                    </div>
+                    
+                    <div class="cart-summary">
+                        <div class="summary-card">
+                            <h3>ملخص الطلب</h3>
+                            <div class="summary-row">
+                                <span>المجموع الفرعي:</span>
+                                <span id="subtotal">0.00 ر.س</span>
+                            </div>
+                            <div class="summary-row">
+                                <span>الشحن:</span>
+                                <span id="shippingCost">0.00 ر.س</span>
+                            </div>
+                            <div class="summary-row total">
+                                <span>الإجمالي:</span>
+                                <span id="totalAmount">0.00 ر.س</span>
+                            </div>
+                            <button class="checkout-btn" id="checkoutBtn">إتمام الشراء</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- إتمام الشراء -->
+            <section id="checkout" class="page">
+                <div class="page-header">
+                    <button class="back-btn">← العودة</button>
+                    <h2>إتمام الشراء</h2>
+                </div>
+
+                <div class="checkout-container">
+                    <div class="security-indicator">
+                        <span class="secure-badge">🔒 آمن</span>
+                        <span>بياناتك محمية بتشفير متقدم</span>
+                    </div>
+
+                    <div class="checkout-steps">
+                        <div class="step active">1. معلومات الشحن</div>
+                        <div class="step">2. طريقة الدفع</div>
+                        <div class="step">3. تأكيد الطلب</div>
+                    </div>
+
+                    <form id="checkoutForm" class="checkout-form">
+                        <!-- معلومات الشحن -->
+                        <div class="checkout-step active" id="shippingStep">
+                            <h3>معلومات الشحن</h3>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="shippingName">الاسم الكامل</label>
+                                    <input type="text" id="shippingName" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="shippingPhone">رقم الهاتف</label>
+                                    <input type="tel" id="shippingPhone" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="shippingAddress">العنوان</label>
+                                <textarea id="shippingAddress" required></textarea>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="shippingCity">المدينة</label>
+                                    <input type="text" id="shippingCity" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="shippingPostal">الرمز البريدي</label>
+                                    <input type="text" id="shippingPostal" required>
+                                </div>
+                            </div>
+                            <button type="button" class="next-step-btn" data-next="paymentStep">التالي</button>
+                        </div>
+
+                        <!-- طريقة الدفع -->
+                        <div class="checkout-step" id="paymentStep">
+                            <h3>اختر طريقة الدفع</h3>
+                            <div class="payment-methods">
+                                <div class="payment-method">
+                                    <input type="radio" id="mastercard" name="paymentMethod" value="mastercard">
+                                    <label for="mastercard">
+                                        <span class="payment-icon">💳</span>
+                                        <span class="payment-name">ماستركارد</span>
+                                    </label>
+                                </div>
+                                <div class="payment-method">
+                                    <input type="radio" id="paypal" name="paymentMethod" value="paypal">
+                                    <label for="paypal">
+                                        <span class="payment-icon">🔵</span>
+                                        <span class="payment-name">باي بال</span>
+                                    </label>
+                                </div>
+                                <div class="payment-method">
+                                    <input type="radio" id="cod" name="paymentMethod" value="cod">
+                                    <label for="cod">
+                                        <span class="payment-icon">💰</span>
+                                        <span class="payment-name">الدفع عند الاستلام</span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <!-- تفاصيل البطاقة -->
+                            <div class="card-details" id="cardDetails">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="cardNumber">رقم البطاقة</label>
+                                        <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="cardExpiry">تاريخ الانتهاء</label>
+                                        <input type="text" id="cardExpiry" placeholder="MM/YY" maxlength="5">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="cardCVC">CVV</label>
+                                        <input type="text" id="cardCVC" placeholder="123" maxlength="4">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="step-actions">
+                                <button type="button" class="prev-step-btn" data-prev="shippingStep">السابق</button>
+                                <button type="button" class="next-step-btn" data-next="confirmStep">التالي</button>
+                            </div>
+                        </div>
+
+                        <!-- تأكيد الطلب -->
+                        <div class="checkout-step" id="confirmStep">
+                            <h3>تأكيد الطلب</h3>
+                            <div class="order-summary">
+                                <div class="order-items" id="confirmOrderItems">
+                                    <!-- سيتم ملؤها ديناميكياً -->
+                                </div>
+                                <div class="order-total">
+                                    <div class="total-row">
+                                        <span>المجموع:</span>
+                                        <span id="confirmSubtotal">0.00 ر.س</span>
+                                    </div>
+                                    <div class="total-row">
+                                        <span>الشحن:</span>
+                                        <span id="confirmShipping">0.00 ر.س</span>
+                                    </div>
+                                    <div class="total-row final">
+                                        <span>الإجمالي النهائي:</span>
+                                        <span id="confirmTotal">0.00 ر.س</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="step-actions">
+                                <button type="button" class="prev-step-btn" data-prev="paymentStep">السابق</button>
+                                <button type="submit" class="confirm-order-btn">تأكيد الطلب</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- صفحة إدارة المنتجات -->
+            <section id="products" class="page">
+                <div class="page-header">
+                    <button class="back-btn">← العودة</button>
+                    <h2>سجل المنتجات</h2>
+                    <button class="add-btn" id="addProductBtn">+ إضافة منتج</button>
+                </div>
+
+                <div class="content-container">
+                    <div class="filters">
+                        <input type="text" placeholder="بحث عن منتج..." class="search-input" id="productSearch">
+                        <select class="filter-select" id="productCategoryFilter">
+                            <option value="">جميع الفئات</option>
+                            <option value="electronics">إلكترونيات</option>
+                            <option value="clothing">ملابس</option>
+                            <option value="home">منزلية</option>
+                        </select>
+                    </div>
+
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>المنتج</th>
+                                    <th>الفئة</th>
+                                    <th>سعر الشراء</th>
+                                    <th>سعر البيع</th>
+                                    <th>الكمية</th>
+                                    <th>المورد</th>
+                                    <th>الربح</th>
+                                    <th>الإجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="productsTableBody">
+                                <!-- سيتم ملؤها ديناميكياً -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- لوحة تحكم العميل -->
+            <section id="customerDashboard" class="page">
+                <div class="page-header">
+                    <button class="back-btn">← العودة</button>
+                    <h2>لوحة تحكم العميل</h2>
+                </div>
+
+                <div class="customer-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon">📦</div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="userTotalOrders">0</span>
+                            <span class="stat-label">إجمالي الطلبات</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">⏳</div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="userPendingOrders">0</span>
+                            <span class="stat-label">طلبات قيد الانتظار</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">💰</div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="userTotalSpent">0 ر.س</span>
+                            <span class="stat-label">إجمالي المشتريات</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recent-orders">
+                    <h3>الطلبات الأخيرة</h3>
+                    <div class="orders-list" id="customerOrdersList">
+                        <!-- سيتم ملؤها ديناميكياً -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- إدارة الطلبات -->
+            <section id="orders" class="page">
+                <div class="page-header">
+                    <button class="back-btn">← العودة</button>
+                    <h2>إدارة الطلبات</h2>
+                </div>
+
+                <div class="orders-filters">
+                    <select class="filter-select" id="orderStatusFilter">
+                        <option value="">جميع الحالات</option>
+                        <option value="pending">قيد الانتظار</option>
+                        <option value="confirmed">تم التأكيد</option>
+                        <option value="shipped">تم الشحن</option>
+                        <option value="delivered">تم التسليم</option>
+                        <option value="cancelled">ملغي</option>
+                    </select>
+                </div>
+
+                <div class="orders-table">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>رقم الطلب</th>
+                                <th>التاريخ</th>
+                                <th>المجموع</th>
+                                <th>حالة الطلب</th>
+                                <th>طريقة الدفع</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersTableBody">
+                            <!-- سيتم ملؤها ديناميكياً -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- إعدادات الدفع -->
+            <section id="paymentSettings" class="page">
+                <div class="page-header">
+                    <button class="back-btn">← العودة</button>
+                    <h2>إعدادات طرق الدفع</h2>
+                </div>
+
+                <div class="settings-container">
+                    <div class="setting-card">
+                        <div class="setting-header">
+                            <h3>ماستركارد</h3>
+                            <label class="switch">
+                                <input type="checkbox" id="mastercardToggle" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <p>قبول الدفع عن طريق بطاقات ماستركارد</p>
+                    </div>
+
+                    <div class="setting-card">
+                        <div class="setting-header">
+                            <h3>باي بال</h3>
+                            <label class="switch">
+                                <input type="checkbox" id="paypalToggle" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <p>قبول الدفع عن طريق باي بال</p>
+                    </div>
+
+                    <div class="setting-card">
+                        <div class="setting-header">
+                            <h3>الدفع عند الاستلام</h3>
+                            <label class="switch">
+                                <input type="checkbox" id="codToggle" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <p>الدفع نقداً عند استلام الطلب</p>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- النوافذ المنبثقة -->
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>إضافة منتج جديد</h3>
+                <span class="close">&times;</span>
+            </div>
+            <form id="productForm" class="modal-form">
+                <div class="form-group">
+                    <label for="productName">اسم المنتج</label>
+                    <input type="text" id="productName" required>
+                </div>
+                <div class="form-group">
+                    <label for="productCategory">الفئة</label>
+                    <select id="productCategory" required>
+                        <option value="">اختر الفئة</option>
+                        <option value="electronics">إلكترونيات</option>
+                        <option value="clothing">ملابس</option>
+                        <option value="home">منزلية</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="productDescription">الوصف</label>
+                    <textarea id="productDescription" rows="3"></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="purchasePrice">سعر الشراء</label>
+                        <input type="number" id="purchasePrice" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="salePrice">سعر البيع</label>
+                        <input type="number" id="salePrice" step="0.01" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="quantity">الكمية</label>
+                        <input type="number" id="quantity" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="supplier">المورد</label>
+                        <select id="supplier" required>
+                            <option value="">اختر المورد</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="cancel-btn">إلغاء</button>
+                    <button type="submit" class="submit-btn">حفظ</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="productDetailModal" class="modal">
+        <div class="modal-content product-detail-modal">
+            <div class="modal-header">
+                <h3>تفاصيل المنتج</h3>
+                <span class="close">&times;</span>
+            </div>
+            <div class="product-detail-content" id="productDetailContent">
+                <!-- سيتم ملؤها ديناميكياً -->
+            </div>
+        </div>
+    </div>
+    <script>
+        // الحصول على العناصر
+        const loginBtn = document.getElementById('loginBtn');
+        const signupBtn = document.getElementById('signupBtn');
+        const loginForm = document.getElementById('loginForm');
+        const signupForm = document.getElementById('signupForm');
+        const backFromLogin = document.getElementById('backFromLogin');
+        const backFromSignup = document.getElementById('backFromSignup');
+        const welcomeSection = document.querySelector('.welcome-section');
+        const formContainer = document.querySelector('.form-container');
+        
+        // إظهار نموذج تسجيل الدخول
+        loginBtn.addEventListener('click', function() {
+            loginForm.classList.add('active');
+            signupForm.classList.remove('active');
+            welcomeSection.style.display = 'none';
+            formContainer.style.transform = 'translateY(0)';
+        });
+        
+        // إظهار نموذج إنشاء حساب
+        signupBtn.addEventListener('click', function() {
+            signupForm.classList.add('active');
+            loginForm.classList.remove('active');
+            welcomeSection.style.display = 'none';
+            formContainer.style.transform = 'translateY(0)';
+        });
+        
+        // العودة من نموذج تسجيل الدخول
+        backFromLogin.addEventListener('click', function() {
+            loginForm.classList.remove('active');
+            welcomeSection.style.display = 'block';
+            formContainer.style.transform = 'translateY(100%)';
+        });
+        
+        // العودة من نموذج إنشاء حساب
+        backFromSignup.addEventListener('click', function() {
+            signupForm.classList.remove('active');
+            welcomeSection.style.display = 'block';
+            formContainer.style.transform = 'translateY(100%)';
+        });
+        
+        // التحقق الأولي من حالة المصادقة
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            if (session) {
+                showDashboard();
+                fetchMessages(); 
+            } else {
+                showLogin();
+            }
+        });
+        
+        function showDashboard() {
+            if(loginContainer && dashboardContainer) {
+                loginContainer.style.display = 'none';
+                dashboardContainer.style.display = 'block';
+            }
+        }
+        
+        function showLogin() {
+             if(loginContainer && dashboardContainer) {
+                loginContainer.style.display = 'block';
+                dashboardContainer.style.display = 'none';
+            }
+        }
+
+        // تسجيل الدخول باستخدام Supabase Auth
+        if (loginForm) {
+            loginForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const email = document.getElementById('login-email').value;
+                const password = document.getElementById('login-password').value;
+
+                // يجب التأكد من إنشاء مستخدم في Supabase Auth أولاً
+                const { error } = await supabase.auth.signInWithPassword({
+                    email: email,
+                    password: password,
+                });
+                
+                if (error) {
+                    alert("فشل تسجيل الدخول: " + error.message);
+                    console.error("Login Error: ", error);
+                } else {
+                    showDashboard();
+                    fetchMessages();
+                }
+            });
+        }
+    </script>
+</body>
+</html>
