@@ -1,0 +1,209 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>متجر غادة - تيشيرت فاخر</title>
+    
+    <!-- روابط CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- شريط التنقل -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-tshirt"></i> غادة
+            </a>
+            
+            <!-- شريط البحث -->
+            <div class="d-flex">
+                <input class="form-control me-2" type="search" placeholder="ابحث عن منتج..." id="searchInput">
+                <button class="btn btn-outline-light" type="submit">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+            
+            <!-- أيقونة عربة التسوق -->
+            <a href="#cartModal" class="btn btn-outline-light position-relative" data-bs-toggle="modal">
+                <i class="fas fa-shopping-cart"></i>
+                <span id="cartCount" class="position-absolute top-0 start-100 translate-middle badge bg-danger">0</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- قسم الخدمات -->
+    <section class="services py-5 bg-light">
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-md-3 col-6 mb-4">
+                    <div class="service-card p-3">
+                        <i class="fas fa-truck fa-2x mb-3 text-success"></i>
+                        <h5>شحن مجاني</h5>
+                        <p class="text-muted">داخل كريمة</p>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6 mb-4">
+                    <div class="service-card p-3">
+                        <i class="fas fa-dollar-sign fa-2x mb-3 text-success"></i>
+                        <h5>خصومات مميزة</h5>
+                        <p class="text-muted">لعملائنا الدائمين</p>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6 mb-4">
+                    <div class="service-card p-3">
+                        <i class="fas fa-money-bill-wave fa-2x mb-3 text-success"></i>
+                        <h5>ضمان الاسترجاع</h5>
+                        <p class="text-muted">خلال 14 يومًا</p>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6 mb-4">
+                    <div class="service-card p-3">
+                        <i class="fas fa-headset fa-2x mb-3 text-success"></i>
+                        <h5>دعم فني</h5>
+                        <p class="text-muted">24/7</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- قسم المنتجات -->
+    <section class="products py-5">
+        <div class="container">
+            <h2 class="text-center mb-5">منتجاتنا</h2>
+            
+            <div class="row" id="productsContainer">
+                <!-- سيتم إضافة المنتجات ديناميكيًا عبر JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- قسم التقييمات -->
+    <section class="testimonials py-5 bg-light">
+        <div class="container">
+            <h2 class="text-center mb-5">آراء عملائنا</h2>
+            <a href="#add-testimonial" class="btn btn-outline-success mt-3">
+     اكتب رأيك عن المتجر
+   </a>
+            
+            <div class="row" id="reviewsContainer">
+                <!-- سيتم إضافة التقييمات ديناميكيًا -->
+            </div>
+        </div>
+    </section>
+
+    <!-- نافذة عربة التسوق -->
+    <div class="modal fade" id="cartModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title">عربة التسوق</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="cartItems" class="mb-3">
+                        <!-- العناصر تضاف هنا بالجافاسكريبت -->
+                        <div class="text-center py-5">
+                            <i class="fas fa-shopping-cart fa-3x text-muted"></i>
+                            <p class="mt-3">عربة التسوق فارغة</p>
+                        </div>
+                    </div>
+                    <div class="cart-summary border-top pt-3">
+                        <div class="d-flex justify-content-between">
+                            <h5>المجموع:</h5>
+                            <h5 id="cartTotal">0 ج.س</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-outline-secondary" data-bs-dismiss="modal">مواصلة التسوق</button>
+                    <button id="checkoutBtn" class="btn btn-success">إتمام الشراء</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- روابط JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+    <!-- ضع هذا الكود قبل غلق </body> -->
+<a href="https://wa.me/message/KQGRMUU3RDVGM1" 
+   class="whatsapp-float" 
+   target="_blank"
+   style="position:fixed; bottom:20px; left:20px; z-index:100;">
+  <i class="fab fa-whatsapp" style="font-size:50px; color:#25D366;"></i>
+</a>
+</body>
+<footer>
+    <div class="site-footer">
+        <div class="logo-section">
+            <img src="images/dropify-logo.png" alt="Ghadah">
+            <p>
+<p> حيث يلتقي الإبداع بالأناقة في عالم التيشيرتات الفاخرة :</p>
+<ul>
+انطلق في رحلة استثنائية معنا، الوجهة الأمثل لاكتشاف تيشيرتات فريدة تجسد ذوقك الرفيع وتعبر عن شخصيتك المتميزة.
+نحن في Ghadah لا نقدم مجرد تيشيرتات، بل نقدم قطعًا فنية قابلة للارتداء، صُممت بعناية فائقة وشغف لا يضاهى. يتميز متجرنا بمجموعة حصرية من التصاميم الفاخرة والمبتكرة التي تلبي تطلعات الباحثين عن التميز والاختلاف.
+اكتشف تشكيلتنا المتنوعة التي تجمع بين:
+ <li> تصاميم فريدة: إبداعات فنية مستوحاة من أحدث صيحات الموضة والثقافات المتنوعة، لتضمن لك إطلالة لا مثيل لها.</li>
+<li> جودة لا تضاهى: خامات فاخرة ومختارة بعناية فائقة لتوفير أفضل درجات الراحة والمتانة.</li>
+<li> لمسة حرفية: طباعة عالية الدقة وتشطيبات متقنة تبرز جمال التصميم وتضمن جودته على المدى الطويل.</li></ul>
+<p>_Ghadah ليس مجرد متجر، بل هو تجربة تسوق فاخرة تمنحك:</p>
+<ul>
+<li> واجهة مستخدم سهلة وجذابة: تصفح سلس وممتع لاكتشاف أحدث التصاميم والمجموعات.</li>
+ <li> خيارات دفع آمنة ومتنوعة: لتجربة شراء مريحة وموثوقة.</li>
+<li> خدمة عملاء استثنائية: فريق متخصص يقدم لك الدعم والمساعدة في كل خطوة.</li>
+</ul>
+<p>_اجعل خزانة ملابسك تعكس أسلوبك الراقي وعبّر عن فرديتك بتيشيرتات Ghadah الفاخرة. ابدأ رحلتك نحو الأناقة المتميزة اليوم!
+لماذا تختار Ghadah؟</p>
+<ul>
+ <li> تصاميم حصرية لا تجدها في أي مكان آخر.</li>
+<li> التزام بأعلى معايير الجودة والفخامة.</li>
+<li> تجربة تسوق مصممة خصيصًا لعشاق الأناقة.</li></ul>
+</div> 
+<div class="nav-item">
+      <a href="https://www.facebook.com/abubakr.khlfall" target="_blank"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" target="_blank"><i class="fab fa-tiktok"></i></a>
+            <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
+            <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+      </div>
+  </div>
+
+  <div class="footer-main-content">
+    <div class="footer-column">
+      <h4 class="footer-heading">الشروط والسياسات</h4>
+      <ul>
+        <li><a href="#">سياسة الخصوصية</a></li>
+        <li><a href="#">سياسة الإسترجاع</a></li>
+        <li><a href="#">سياسة الشحن</a></li>
+        <li><a href="#">شروط الخدمة</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-column">
+      <h4 class="footer-heading">روابط سريعة</h4>
+      <ul>
+        <li><a href="tsn_page.html">تصنيفاتنا</a></li>
+        <li><a href="#">اتصل بنا</a></li>
+        <li><a href="#">سياسة الإسترجاع</a></li>
+        <li><a href="#">سياسة الخصوصية</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-column">
+      <h4 class="footer-heading">خدمة العملاء</h4>
+      <p><i class="fas fa-map-marker-alt"></i> الشمالية ، كريمة</p>
+      <p><i class="fas fa-phone"></i> 0917744229</p>
+      <p><i class="fas fa-shopping-cart"></i> 0113323369</p>
+      <p><i class="fas fa-envelope"></i> abubakrkhilfalih@gmail.com</p>
+      </div>
+  </div>
+</footer>
+    <div class="footer-bottom">
+        <p>&copy; جميع الحقوق محفوظة.Ghadah</p>
+    </div>
+</html>
