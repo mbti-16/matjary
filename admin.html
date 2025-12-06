@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>متجر غادة - لوحة المسؤول</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+
+    <div id="admin-app-container">
+        
+        <header class="admin-header">
+            <div class="logo">لوحة تحكم المسؤول</div>
+            <button class="logout-btn" onclick="window.location.href='index.html'">
+                <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+            </button>
+        </header>
+
+        <section id="admin-dashboard-view" class="admin-view active-view">
+            <div class="welcome-card">
+                <i class="fas fa-store"></i>
+                <div>
+                    <h2>مرحباً بك، أيها المدير</h2>
+                    <p>إدارة متجرك بكل سهولة وفعالية</p>
+                </div>
+                <button class="date-btn"><i class="fas fa-calendar-alt"></i> اليوم</button>
+            </div>
+            
+            <h3 class="section-title">الأقسام الرئيسية</h3>
+            <span class="total-sections-count">12 قسم</span>
+            
+            <div class="main-sections-grid">
+                <div class="section-card" data-view="customers-view"><i class="fas fa-users"></i><span>العملاء</span></div>
+                <div class="section-card" data-view="sales-view"><i class="fas fa-receipt"></i><span>المبيعات</span></div>
+                <div class="section-card" data-view="inventory-view"><i class="fas fa-boxes"></i><span>المخزون</span></div>
+                
+                <div class="section-card alert-card" data-view="inventory-alerts-view">
+                    <i class="fas fa-bell"></i>
+                    <span>تنبيهات المخزون</span>
+                    <span class="alert-count" id="dashboard-alert-count">3</span>
+                </div>
+                <div class="section-card" data-view="reports-view"><i class="fas fa-chart-line"></i><span>التقارير</span></div>
+                <div class="section-card" data-view="products-log-view"><i class="fas fa-box-open"></i><span>سجل المنتجات</span></div>
+                
+                <div class="section-card" data-view="purchases-view"><i class="fas fa-shopping-cart"></i><span>المشتريات</span></div>
+                <div class="section-card" data-view="units-view"><i class="fas fa-weight"></i><span>الوحدات</span></div>
+                <div class="section-card" data-view="currencies-view"><i class="fas fa-dollar-sign"></i><span>العملات</span></div>
+                
+                <div class="section-card" data-view="settings-view"><i class="fas fa-cog"></i><span>الإعدادات</span></div>
+                <div class="section-card" data-view="departments-view"><i class="fas fa-th-large"></i><span>إدارة الأقسام</span></div>
+                <div class="section-card" data-view="suppliers-view"><i class="fas fa-truck"></i><span>الموردين</span></div>
+            </div>
+        </section>
+
+        <section id="inventory-alerts-view" class="admin-view hidden-view">
+            <button class="back-btn" onclick="navigateToAdmin('admin-dashboard-view')"><i class="fas fa-arrow-right"></i> العودة</button>
+            <h2 class="section-title">⚠️ تنبيهات المخزون</h2>
+            
+            <div class="top-alert-card">
+                <div class="alert-info">
+                    <span id="low-stock-count">3</span>
+                    <h4>منتجات تحتاج إعادة طلب</h4>
+                    <p>لديك <span id="low-stock-count-text">3</span> منتجات بكمية منخفضة</p>
+                </div>
+                <i class="fas fa-exclamation-circle"></i>
+            </div>
+            
+            <div id="inventory-alerts-list">
+                </div>
+        </section>
+
+        <section id="reports-view" class="admin-view hidden-view">
+            <button class="back-btn" onclick="navigateToAdmin('admin-dashboard-view')"><i class="fas fa-arrow-right"></i> العودة</button>
+            <h2 class="section-title">📊 التقارير</h2>
+            
+            <div class="report-filter-bar">
+                <h3>اختر الفترة الزمنية</h3>
+                <button class="filter-btn active-filter">اليوم</button>
+                <button class="filter-btn">أسبوع</button>
+                <button class="filter-btn">شهر</button>
+            </div>
+
+            <div class="report-section graph-section">
+                <h3>رسم بياني للمبيعات</h3>
+                <p>القيمة بالريال: <span id="report-total-sales-value">8,323.00</span> ر.س</p>
+                <div id="sales-graph-container" class="sales-graph-container">
+                    </div>
+            </div>
+            
+            <div class="report-section profit-section">
+                <div class="profit-header">
+                    <span class="profit-percentage"><span id="report-profit-percentage">29.5</span>% ↑</span>
+                    <i class="fas fa-money-bill-alt"></i>
+                </div>
+                <h3>إجمالي الأرباح</h3>
+                <p class="financial-data"><span id="report-total-profit">2,457.00</span> ريال</p>
+                <p class="profit-margin-text">هامش الربح من إجمالي المبيعات</p>
+            </div>
+
+            <div class="report-section best-selling-section">
+                <h3>أكثر المنتجات مبيعاً</h3>
+                <div id="best-selling-products">
+                    </div>
+            </div>
+        </section>
+
+        <section id="currencies-view" class="admin-view hidden-view">
+            <button class="back-btn" onclick="navigateToAdmin('admin-dashboard-view')"><i class="fas fa-arrow-right"></i> العودة</button>
+            <h2 class="section-title orange-title">💲 إدارة العملات</h2>
+            <p class="section-subtitle">تتبع وإدارة جميع العملات المتاحة</p>
+
+            <div class="top-stats-grid currency-stats">
+                <div class="stat-card orange-stat">
+                    <span>إجمالي العملات</span>
+                    <p><span id="total-currencies-count">2</span> عملة</p>
+                    <i class="fas fa-globe"></i>
+                </div>
+                <div class="stat-card">
+                    <span>نشط</span>
+                    <p>↑</p>
+                </div>
+            </div>
+
+            <h3 class="section-subtitle">قائمة العملات</h3>
+            <div id="currencies-list">
+                </div>
+
+            <button id="add-currency-btn" class="primary-btn wide-btn fixed-bottom-btn orange-btn"><i class="fas fa-plus"></i> إضافة عملة</button>
+        </section>
+
+        <section id="products-log-view" class="admin-view hidden-view">
+            <button class="back-btn" onclick="navigateToAdmin('admin-dashboard-view')"><i class="fas fa-arrow-right"></i> العودة</button>
+            <h2 class="section-title">📦 سجل المنتجات</h2>
+            <p style="text-align: center; color: #777;">جدول سجل المنتجات</p>
+        </section>
+
+        <section id="purchases-view" class="admin-view hidden-view">
+            <button class="back-btn" onclick="navigateToAdmin('admin-dashboard-view')"><i class="fas fa-arrow-right"></i> العودة</button>
+            <h2 class="section-title">🛒 المشتريات</h2>
+            <p style="text-align: center; color: #777;">جدول المشتريات</p>
+        </section>
+
+        <section id="units-view" class="admin-view hidden-view">
+            <button class="back-btn" onclick="navigateToAdmin('admin-dashboard-view')"><i class="fas fa-arrow-right"></i> العودة</button>
+            <h2 class="section-title">⚖️ إدارة الوحدات</h2>
+            <p class="section-subtitle">إضافة وتعديل وحدات قياس المنتجات</p>
+
+            <div id="units-list">
+                </div>
+            
+            <button id="add-unit-btn" class="primary-btn wide-btn fixed-bottom-btn" onclick="showAddUnitModal()"><i class="fas fa-plus"></i> إضافة وحدة جديدة</button>
+        </section>
+        
+        <section id="departments-view" class="admin-view hidden-view">
+            <button class="back-btn" onclick="navigateToAdmin('admin-dashboard-view')"><i class="fas fa-arrow-right"></i> العودة</button>
+            <h2 class="section-title">🗂️ إدارة الأقسام</h2>
+            <p class="section-subtitle">تصنيف المنتجات حسب الأقسام</p>
+
+            <div id="departments-list">
+                </div>
+            
+            <button id="add-department-btn" class="primary-btn wide-btn fixed-bottom-btn" onclick="showAddDepartmentModal()"><i class="fas fa-plus"></i> إضافة قسم جديد</button>
+        </section>
+
+        <section id="customers-view" class="admin-view hidden-view">
+            <button class="back-btn" onclick="navigateToAdmin('admin-dashboard-view')"><i class="fas fa-arrow-right"></i> العودة</button>
+            <h2 class="section-title">👥 العملاء</h2>
+            <p style="text-align: center; color: #777;">جدول بيانات العملاء</p>
+        </section>
+
+        <section id="sales-view" class="admin-view hidden-view">
+            <button class="back-btn" onclick="navigateToAdmin('admin-dashboard-view')"><i class="fas fa-arrow-right"></i> العودة</button>
+            <h2 class="section-title">💵 المبيعات</h2>
+            <p style="text-align: center; color: #777;">جدول فواتير المبيعات</p>
+        </section>
+        
+        <section id="inventory-view" class="admin-view hidden-view">
+            <button class="back-btn" onclick="navigateToAdmin('admin-dashboard-view')"><i class="fas fa-arrow-right"></i> العودة</button>
+            <h2 class="section-title">🧺 المخزون</h2>
+            <p style="text-align: center; color: #777;">واجهة عرض المخزون حسب الفئة</p>
+        </section>
+        
+        <section id="suppliers-view" class="admin-view hidden-view">
+            <button class="back-btn" onclick="navigateToAdmin('admin-dashboard-view')"><i class="fas fa-arrow-right"></i> العودة</button>
+            <h2 class="section-title">🚚 الموردين</h2>
+            <p style="text-align: center; color: #777;">جدول بيانات الموردين</p>
+        </section>
+
+        <section id="settings-view" class="admin-view hidden-view">
+            <button class="back-btn" onclick="navigateToAdmin('admin-dashboard-view')"><i class="fas fa-arrow-right"></i> العودة</button>
+            <h2 class="section-title">⚙️ الإعدادات</h2>
+            <p style="text-align: center; color: #777;">إعدادات الدفع والنظام</p>
+        </section>
+        
+        <div id="add-unit-modal" class="modal hidden-modal">
+            </div>
+        <div id="add-department-modal" class="modal hidden-modal">
+            </div>
+
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // بدء تشغيل تطبيق المسؤول عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', initializeAdminApp);
+    </script>
+</body>
+</html>
+

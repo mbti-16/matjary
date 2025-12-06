@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>متجر غادة - واجهة العميل</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+
+    <div id="app-container">
+        
+        <div id="login-modal" class="modal active-modal">
+            <div class="modal-content">
+                <h2 class="modal-title">تسجيل الدخول</h2>
+                <form id="login-form">
+                    
+                    <div class="input-group">
+                        <label for="login-email">البريد الإلكتروني</label>
+                        <input type="email" id="login-email" required>
+                    </div>
+                    
+                    <div class="input-group password-group">
+                        <label for="login-password">كلمة المرور</label>
+                        <input type="password" id="login-password" required>
+                        <i class="fas fa-eye password-toggle-icon" id="toggle-password"></i>
+                    </div>
+
+                    <button type="button" class="forgot-password-btn" onclick="showForgotPasswordModal()">
+                        نسيت كلمة المرور؟
+                    </button>
+                    
+                    <button type="submit" class="primary-btn wide-btn">تسجيل الدخول</button>
+
+                    <button type="button" class="secondary-btn wide-btn register-btn" onclick="showRegisterModal()">
+                        إنشاء حساب جديد
+                    </button>
+                    
+                    <button type="button" class="secondary-btn wide-btn admin-link" onclick="window.location.href='admin.html'">
+                        الوصول كمسؤول
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div id="register-modal" class="modal hidden-modal">
+            <div class="modal-content">
+                <h2 class="modal-title">إنشاء حساب</h2>
+                <form id="register-form">
+                    <div class="input-group">
+                        <label for="register-name">الاسم الكامل</label>
+                        <input type="text" id="register-name" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="register-email">البريد الإلكتروني</label>
+                        <input type="email" id="register-email" required>
+                    </div>
+                    <div class="input-group password-group">
+                        <label for="register-password">كلمة المرور</label>
+                        <input type="password" id="register-password" required>
+                    </div>
+                    <button type="submit" class="primary-btn wide-btn">تسجيل</button>
+                    <button type="button" class="secondary-btn wide-btn" onclick="showLoginModal()">
+                        العودة لتسجيل الدخول
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div id="forgot-password-modal" class="modal hidden-modal">
+            <div class="modal-content">
+                <h2 class="modal-title">استعادة كلمة المرور</h2>
+                <p class="section-subtitle">أدخل بريدك الإلكتروني لإرسال رابط إعادة تعيين كلمة المرور.</p>
+                <form id="forgot-password-form">
+                    <div class="input-group">
+                        <label for="forgot-email">البريد الإلكتروني</label>
+                        <input type="email" id="forgot-email" required>
+                    </div>
+                    <button type="submit" class="primary-btn wide-btn">إرسال رابط الاستعادة</button>
+                    <button type="button" class="secondary-btn wide-btn" onclick="showLoginModal()">
+                        العودة لتسجيل الدخول
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <section id="products-view" class="hidden-view">
+            <header>
+                <div class="logo">متجر غادة</div>
+                <div class="header-icons">
+                    <span class="cart-icon" onclick="showCartModal()">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span id="cart-count">0</span>
+                    </span>
+                    <button class="logout-btn" onclick="logoutUser()">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
+            </header>
+
+            <h1 class="page-title">منتجاتنا</h1>
+            <div id="products-list">
+                </div>
+
+            <div class="whatsapp-fixed-btn">
+                <i class="fab fa-whatsapp"></i>
+            </div>
+            <div class="footer">
+                <p>© 2024 جميع الحقوق محفوظة Ghada.h</p>
+            </div>
+        </section>
+
+        <div id="cart-modal" class="modal hidden-modal">
+            <div class="modal-content">
+                <button class="close-modal-btn" onclick="hideCartModal()">&times;</button>
+                <h2 class="modal-title">🛒 عربة التسوق</h2>
+                <div id="cart-items">
+                    </div>
+                <div class="cart-summary">
+                    <p>الإجمالي الفرعي: <span id="cart-subtotal">0.00</span> ج.س</p>
+                </div>
+                <button class="primary-btn wide-btn" onclick="checkout()">إتمام الطلب</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
