@@ -67,17 +67,4 @@ document.addEventListener('DOMContentLoaded', () => {
                     fetchMessages();
                 }
             });
-        }
-        
-        // تسجيل الخروج
-        if (logoutBtn) {
-            logoutBtn.addEventListener('click', async () => {
-                const { error } = await supabase.auth.signOut();
-                if (error) {
-                    console.error("Logout Error: ", error);
-                } else {
-                    showLogin();
-                    alert("تم تسجيل الخروج بنجاح.");
-                }
-            });
-        }
+        } 
