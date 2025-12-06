@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منتجاتنا - متجر فاخر</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body>
+
+    <header id="main-header">
+        <h1 class="store-name">متجر غادة</h1>
+        <div class="header-actions">
+            <button id="login-btn" class="icon-btn" aria-label="تسجيل الدخول">
+                <i class="fas fa-user-circle"></i>
+            </button>
+            <button id="cart-icon-btn" class="icon-btn cart-icon" aria-label="عربة التسوق">
+                <i class="fas fa-shopping-cart"></i>
+                <span id="cart-count" class="badge">0</span>
+            </button>
+        </div>
+    </header>
+
+    <div id="login-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2>تسجيل الدخول</h2>
+            <form id="login-form">
+                <div class="input-group">
+                    <label for="login-email">البريد الإلكتروني:</label>
+                    <input type="email" id="login-email" required>
+                </div>
+                <div class="input-group password-group">
+                    <label for="login-password">كلمة المرور:</label>
+                    <input type="password" id="login-password" required>
+                    <button type="button" class="toggle-password-btn"><i class="fas fa-eye"></i></button>
+                </div>
+                <button type="submit" class="primary-btn">دخول</button>
+                <p id="login-error" class="error-message"></p>
+                <button id="forgot-password-link" class="link-btn">نسيت كلمة المرور؟</button>
+            </form>
+            <button id="signup-link" class="link-btn">إنشاء حساب جديد</button>
+            <button id="admin-login-link" class="link-btn">تسجيل دخول المسؤول</button>
+        </div>
+    </div>
+    
+    <div id="signup-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2>إنشاء حساب</h2>
+            <form id="signup-form">
+                <div class="input-group">
+                    <label for="signup-name">الاسم:</label>
+                    <input type="text" id="signup-name" required>
+                </div>
+                <div class="input-group">
+                    <label for="signup-email">البريد الإلكتروني:</label>
+                    <input type="email" id="signup-email" required>
+                </div>
+                <div class="input-group password-group">
+                    <label for="signup-password">كلمة المرور:</label>
+                    <input type="password" id="signup-password" required minlength="6">
+                    <button type="button" class="toggle-password-btn"><i class="fas fa-eye"></i></button>
+                </div>
+                <button type="submit" class="primary-btn">تسجيل</button>
+                <p id="signup-error" class="error-message"></p>
+            </form>
+        </div>
+    </div>
+
+    <main id="app-container">
+
+        <section id="products-view" class="active-view">
+            <h2 class="section-title">✨ منتجاتنا</h2>
+            <div id="products-list" class="grid-container">
+                </div>
+        </section>
+
+        <section id="cart-view" class="hidden-view">
+            <h2 class="section-title">🛒 عربة التسوق</h2>
+            <div id="cart-items-list">
+                </div>
+            <div class="cart-summary">
+                <p>الإجمالي الفرعي: <span id="cart-subtotal" class="financial-data">0.00 ر.س</span></p>
+                <p>رسوم الشحن: <span id="shipping-fee" class="financial-data">0.00 ر.س</span></p>
+                <h3>الإجمالي النهائي: <span id="cart-total" class="financial-data">0.00 ر.س</span></h3>
+                
+                <div id="checkout-steps">
+                    <form id="checkout-form">
+                        <h3>طريقة الدفع</h3>
+                        <div id="payment-options" class="payment-options-grid">
+                            </div>
+                        
+                        <h3>معلومات الشحن</h3>
+                        <div class="input-group">
+                            <label for="shipping-address">العنوان الكامل:</label>
+                            <input type="text" id="shipping-address" required data-validation="address">
+                        </div>
+                        <div class="input-group">
+                            <label for="shipping-phone">رقم الهاتف:</label>
+                            <input type="tel" id="shipping-phone" required pattern="[0-9]{10,15}" data-validation="phone">
+                        </div>
+                        
+                        <button type="submit" class="primary-btn wide-btn" id="complete-order-btn">إتمام الطلب</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <section id="customer-dashboard-view" class="hidden-view">
+            <h2 class="section-title">👤 لوحة تحكم العميل</h2>
+            <p>أهلاً بك، <span id="customer-name">العميل</span>!</p>
+            
+            <div class="dashboard-card">
+                <h3>طلباتي الأخيرة</h3>
+                <div id="customer-orders-list">
+                    <p class="empty-state">لا توجد طلبات سابقة.</p>
+                </div>
+            </div>
+            
+            <button id="logout-btn" class="secondary-btn">تسجيل الخروج</button>
+        </section>
+
+        <section id="order-management-view" class="hidden-view">
+            <h2 class="section-title">📄 تفاصيل الطلب</h2>
+            <div id="order-details-content">
+                </div>
+            <button class="secondary-btn" onclick="navigateTo('products-view')">العودة للمنتجات</button>
+        </section>
+
+    </main>
+    
+    <footer>
+        <p>© 2025 جميع الحقوق محفوظة لـ Ghada Store.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="script.js"></script>
+</body>
+</html>
