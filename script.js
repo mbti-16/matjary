@@ -1,7 +1,7 @@
 // =========================================================================
 // 1. إعداد Supabase والبيانات الأولية (Initial Data & Supabase Setup)
 // =========================================================================
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2'
 
 // معلومات اتصال Supabase
 const SUPABASE_URL = 'https://bmehblfgoxxbokiqvojb.supabase.co';
