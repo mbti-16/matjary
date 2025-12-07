@@ -1,8 +1,8 @@
 // ====== تهيئة Supabase ======
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
 
-const supabaseUrl = 'https://jydidgltemleeubnyihq.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp5ZGlkZ2x0ZW1sZWV1Ym55aWhxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQwMTc1MzksImV4cCI6MjA3OTU5MzUzOX0.3uAFr-ofM5z2gp-A1HYISAAer4WrGDqy8IW9FXf7bjQ'; //Placeholder
+const supabaseUrl = 'https://bmehblfgoxxbokiqvojb.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJtZWhibGZnb3h4Ym9raXF2b2piIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQxMTA1NzYsImV4cCI6MjA3OTY4NjU3Nn0.CJKGad9xl5ZZv-hHkc0Ot3yLEsHyGfb-R3yfm5p_mfc'; //Placeholder
 
 // سنستخدم المفتاح السري الذي زودتني به لضمان نجاح الاتصال في هذا المثال، مع تحذير شديد بعدم استخدامه في الإنتاج.
 // const supabaseKey = 'sb_secret_C3SOpEXmfyueo2vgP1Gi8Q_ApfnT6fx'; 
