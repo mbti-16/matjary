@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم</title>
+    <link rel="stylesheet" href="admin-styles.css">
+</head>
+<body>
+    <section id="ordersSection" class="section-content">
+        <div class="table-container">
+            <div class="table-header">
+                <h2><i class="fas fa-shopping-cart"></i> إدارة الطلبات</h2>
+                <div class="table-actions">
+                    <div class="filter-group">
+                        <select id="orderStatusFilter">
+                            <option value="">جميع الحالات</option>
+                            <option value="قيد الانتظار">قيد الانتظار</option>
+                            <option value="قيد التجهيز">قيد التجهيز</option>
+                            <option value="تم الشحن">تم الشحن</option>
+                            <option value="تم التسليم">تم التسليم</option>
+                            <option value="ملغي">ملغي</option>
+                        </select>
+                        <input type="date" id="orderDateFilter">
+                    </div>
+                    <button class="btn btn-success" id="exportOrdersBtn">
+                        <i class="fas fa-file-export"></i> تصدير
+                    </button>
+                </div>
+            </div>
+            <div id="ordersTable">
+                <div class="loading">جاري تحميل بيانات الطلبات...</div>
+            </div>
+        </div>
+    </section>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="admin-functions.js"></script>
+</body>
+</html>

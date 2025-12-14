@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم</title>
+    <link rel="stylesheet" href="admin-styles.css">
+</head>
+<body>
+    <section id="inventorySection" class="section-content">
+        <div class="table-container">
+            <div class="table-header">
+                <h2><i class="fas fa-exclamation-triangle"></i> تنبيهات المخزون</h2>
+                <div class="table-actions">
+                    <select id="inventoryThreshold">
+                        <option value="5">أقل من 5 قطع</option>
+                        <option value="10">أقل من 10 قطع</option>
+                        <option value="20">أقل من 20 قطعة</option>
+                    </select>
+                    <button class="btn btn-warning" id="restockAllBtn">
+                        <i class="fas fa-boxes"></i> إعادة تخزين الكل
+                    </button>
+                </div>
+            </div>
+            <div class="alert alert-warning">
+                <i class="fas fa-info-circle"></i>
+                المنتجات التي تقل كميتها عن الحد المحدد تظهر في هذه القائمة
+            </div>
+            <div id="inventoryTable">
+                <div class="loading">جاري تحميل بيانات المخزون...</div>
+            </div>
+        </div>
+    </section>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="admin-functions.js"></script>
+</body>
+</html>
