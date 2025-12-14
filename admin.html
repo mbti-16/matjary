@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام إدارة المتجر - لوحة التحكم</title>
+    <link rel="stylesheet" href="admin-styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- ========== واجهة المسؤول الرئيسية ========== -->
+    <div class="admin-container">
+        <!-- الشريط الجانبي -->
+        <aside class="admin-sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-store"></i> متجري</h2>
+                <p>نظام الإدارة المتكامل</p>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul>
+                    <li>
+                        <a href="#home" class="active" data-section="dashboard">
+                            <i class="fas fa-home"></i>
+                            <span>الرئيسية</span>
+                            <span class="badge">12</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/gh/customersSection.html" data-section="customers">
+                            <i class="fas fa-users"></i>
+                            <span>العملاء</span>
+                            <span class="badge" id="customersCount">0</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/gh/ordersSection.html" data-section="orders">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>الطلبات</span>
+                            <span class="badge" id="ordersCount">0</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/gh/categoriesSection.html" data-section="categories">
+                            <i class="fas fa-list-alt"></i>
+                            <span>الأقسام</span>
+                            <span class="badge" id="categoriesCount">0</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/gh/inventorySection.html" data-section="inventory">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <span>تنبيهات المخزون</span>
+                            <span class="badge" id="inventoryCount">0</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/gh/reportsSection.html" data-section="reports">
+                            <i class="fas fa-chart-bar"></i>
+                            <span>التقارير</span>
+                            <span class="badge" id="reportsCount">0</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/gh/productsSection.html" data-section="products">
+                            <i class="fas fa-box"></i>
+                            <span>سجل المنتجات</span>
+                            <span class="badge" id="productsCount">0</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/gh/purchasesSection.html" data-section="purchases">
+                            <i class="fas fa-file-invoice-dollar"></i>
+                            <span>المشتريات</span>
+                            <span class="badge" id="purchasesCount">0</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/gh/unitsSection.html" data-section="units">
+                            <i class="fas fa-balance-scale"></i>
+                            <span>الوحدات</span>
+                            <span class="badge" id="unitsCount">0</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/gh/currenciesSection.html" data-section="currencies">
+                            <i class="fas fa-money-bill-wave"></i>
+                            <span>العملات</span>
+                            <span class="badge" id="currenciesCount">0</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/gh/settingsSection.html" data-section="settings">
+                            <i class="fas fa-cog"></i>
+                            <span>الإعدادات</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/gh/suppliersSection.html" data-section="suppliers">
+                            <i class="fas fa-truck"></i>
+                            <span>الموردين</span>
+                            <span class="badge" id="suppliersCount">0</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+        
+        <!-- المحتوى الرئيسي -->
+        <main class="admin-main">
+            <!-- شريط التنقل العلوي -->
+            <header class="admin-header">
+                <h1><i class="fas fa-tachometer-alt"></i> لوحة التحكم الرئيسية</h1>
+                <div class="admin-actions">
+                    <div class="notification-badge">
+                        <i class="fas fa-bell"></i>
+                        <span class="badge">5</span>
+                    </div>
+                    <button class="btn btn-primary" id="refreshData">
+                        <i class="fas fa-sync-alt"></i> تحديث البيانات
+                    </button>
+                    <button class="btn btn-logout" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+                    </button>
+                </div>
+            </header>
+            
+            <!-- قسم لوحة التحكم -->
+            <section id="dashboardSection" class="section-content">
+                <!-- الإحصائيات السريعة -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon gradient-1">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalCustomers">0</h3>
+                            <p>إجمالي العملاء</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon gradient-2">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalOrders">0</h3>
+                            <p>إجمالي الطلبات</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon gradient-3">
+                            <i class="fas fa-box"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalProducts">0</h3>
+                            <p>إجمالي المنتجات</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon gradient-4">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalSales">0 ر.س</h3>
+                            <p>إجمالي المبيعات</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- البطاقات الرئيسية -->
+                <div class="cards-grid">
+                    <!-- سيتم ملؤها بالجافاسكريبت -->
+                </div>
+                
+                <!-- الرسوم البيانية -->
+                <div class="chart-container">
+                    <h3><i class="fas fa-chart-line"></i> إحصائيات المبيعات</h3>
+                    <canvas id="salesChart"></canvas>
+                </div>
+                
+                <!-- آخر الطلبات -->
+                <div class="table-container">
+                    <div class="table-header">
+                        <h2><i class="fas fa-clock"></i> أحدث الطلبات</h2>
+                        <a href="/gh/ordersSection.html" data-section="orders" class="btn btn-primary">
+                            <i class="fas fa-eye"></i> عرض الكل
+                        </a>
+                    </div>
+                    <div id="recentOrders">
+                        <div class="loading">جاري تحميل الطلبات...</div>
+                    </div>
+                </div>
+                
+                <!-- تنبيهات المخزون -->
+                <div class="table-container">
+                    <div class="table-header">
+                        <h2><i class="fas fa-exclamation-triangle"></i> تنبيهات المخزون</h2>
+                        <a href="#" data-section="inventory" class="btn btn-warning">
+                            <i class="fas fa-boxes"></i> إدارة المخزون
+                        </a>
+                    </div>
+                    <div id="inventoryAlerts">
+                        <div class="loading">جاري تحميل التنبيهات...</div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- ========== أقسام النظام ========== -->
+    
+    <!-- قسم العملاء -->
+    
+
+    <!-- قسم الطلبات -->
+    
+
+    <!-- قسم الأقسام -->
+  
+
+    <!-- قسم تنبيهات المخزون -->
+    
+
+    <!-- قسم التقارير -->
+  
+
+    <!-- قسم سجل المنتجات -->
+    
+
+    <!-- قسم المشتريات -->
+    
+
+    <!-- قسم الوحدات -->
+    
+    
+    <!-- قسم العملات -->
+    
+
+    <!-- قسم الإعدادات -->
+    
+
+    <!-- قسم الموردين -->
+    
+
+    <!-- ========== النماذج المنبثقة ========== -->
+    
+    <!-- نموذج إضافة منتج -->
+    <div id="addProductModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-box"></i> إضافة منتج جديد</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="productForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="productName">اسم المنتج *</label>
+                            <input type="text" id="productName" name="productName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="productCategory">القسم *</label>
+                            <select id="productCategory" name="productCategory" required>
+                                <option value="">اختر القسم</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="productSKU">كود المنتج (SKU)</label>
+                            <input type="text" id="productSKU" name="productSKU">
+                        </div>
+                        <div class="form-group">
+                            <label for="productBarcode">الباركود</label>
+                            <input type="text" id="productBarcode" name="productBarcode">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="buyPrice">سعر الشراء (ر.س) *</label>
+                            <input type="number" id="buyPrice" name="buyPrice" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="sellPrice">سعر البيع (ر.س) *</label>
+                            <input type="number" id="sellPrice" name="sellPrice" step="0.01" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="quantity">الكمية *</label>
+                            <input type="number" id="quantity" name="quantity" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="unit">الوحدة</label>
+                            <select id="unit" name="unit">
+                                <option value="">اختر الوحدة</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="supplier">المورد</label>
+                            <select id="supplier" name="supplier">
+                                <option value="">اختر المورد</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="productWeight">الوزن (كجم)</label>
+                            <input type="number" id="productWeight" name="productWeight" step="0.01">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="imageUrl">رابط الصورة</label>
+                            <input type="text" id="imageUrl" name="imageUrl" placeholder="https://example.com/image.jpg">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="productDescription">الوصف</label>
+                            <textarea id="productDescription" name="productDescription" rows="4"></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> حفظ المنتج
+                        </button>
+                        <button type="button" class="btn btn-danger close-modal">
+                            <i class="fas fa-times"></i> إلغاء
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- نموذج عرض تفاصيل الطلب -->
+    <div id="orderDetailsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-shopping-cart"></i> تفاصيل الطلب</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="orderDetailsContent">
+                    <div class="loading">جاري تحميل تفاصيل الطلب...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- نموذج إضافة فاتورة -->
+    <div id="addInvoiceModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-file-invoice"></i> إضافة فاتورة جديدة</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="invoiceForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="invoiceNumber">رقم الفاتورة *</label>
+                            <input type="text" id="invoiceNumber" name="invoiceNumber" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="invoiceDate">تاريخ الفاتورة *</label>
+                            <input type="date" id="invoiceDate" name="invoiceDate" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="supplier">المورد *</label>
+                            <select id="invoiceSupplier" name="supplier" required>
+                                <option value="">اختر المورد</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="invoiceTotal">المبلغ الإجمالي (ر.س) *</label>
+                            <input type="number" id="invoiceTotal" name="invoiceTotal" step="0.01" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="paymentStatus">حالة الدفع</label>
+                            <select id="paymentStatus" name="paymentStatus">
+                                <option value="مدفوعة">مدفوعة</option>
+                                <option value="غير مدفوعة" selected>غير مدفوعة</option>
+                                <option value="مدفوعة جزئياً">مدفوعة جزئياً</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="dueDate">تاريخ الاستحقاق</label>
+                            <input type="date" id="dueDate" name="dueDate">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="invoiceNotes">ملاحظات</label>
+                            <textarea id="invoiceNotes" name="invoiceNotes" rows="3"></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> حفظ الفاتورة
+                        </button>
+                        <button type="button" class="btn btn-danger close-modal">
+                            <i class="fas fa-times"></i> إلغاء
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- نموذج إعادة تخزين -->
+    <div id="restockModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-boxes"></i> إعادة تخزين المنتج</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="restockForm">
+                    <input type="hidden" id="restockProductId">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="currentQuantity">الكمية الحالية</label>
+                            <input type="text" id="currentQuantity" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="addQuantity">الكمية المضافة *</label>
+                            <input type="number" id="addQuantity" name="addQuantity" min="1" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="restockPrice">سعر الشراء (ر.س)</label>
+                            <input type="number" id="restockPrice" name="restockPrice" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label for="restockSupplier">المورد</label>
+                            <select id="restockSupplier" name="restockSupplier">
+                                <option value="">اختر المورد</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> تأكيد إعادة التخزين
+                        </button>
+                        <button type="button" class="btn btn-danger close-modal">
+                            <i class="fas fa-times"></i> إلغاء
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- نموذج معاينة الفاتورة -->
+    <div id="invoicePreviewModal" class="modal">
+        <div class="modal-content" style="max-width: 900px;">
+            <div class="modal-header">
+                <h3><i class="fas fa-file-invoice"></i> معاينة الفاتورة</h3>
+                <div>
+                    <button class="btn btn-success" onclick="printInvoice()">
+                        <i class="fas fa-print"></i> طباعة
+                    </button>
+                    <button class="btn btn-primary" onclick="downloadInvoice()">
+                        <i class="fas fa-download"></i> تحميل PDF
+                    </button>
+                    <button class="close-modal">&times;</button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div id="invoicePreviewContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="admin-functions.js"></script>
+</body>
+</html>
