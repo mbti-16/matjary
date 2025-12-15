@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم</title>
+    <link rel="stylesheet" href="admin-styles.css">
+</head>
+<body>
+    <section id="ordersSection" class="section-content">
+        <div class="table-container">
+            <div class="table-header">
+                <h2><i class="fas fa-shopping-cart"></i> إدارة الطلبات</h2>
+                <div class="table-actions">
+                    <div class="filter-group">
+                        <select id="orderStatusFilter">
+                            <option value="">جميع الحالات</option>
+                            <option value="قيد الانتظار">قيد الانتظار</option>
+                            <option value="قيد التجهيز">قيد التجهيز</option>
+                            <option value="تم الشحن">تم الشحن</option>
+                            <option value="تم التسليم">تم التسليم</option>
+                            <option value="ملغي">ملغي</option>
+                        </select>
+                        <input type="date" id="orderDateFilter">
+                    </div>
+                    <button class="btn btn-success" id="exportOrdersBtn">
+                        <i class="fas fa-file-export"></i> تصدير
+                    </button>
+                </div>
+            </div>
+            <div id="ordersTable">
+                <div class="loading">جاري تحميل بيانات الطلبات...</div>
+            </div>
+        </div>
+    </section>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src=>
+      // =================================================================
+// 1. تعريف العناصر الأساسية (بافتراض استخدامها لإدارة المنتجات)
+// =================================================================
+
+// فلاتر البحث - نستخدم معرفات HTML المتوفرة
+const productStatusFilter = document.getElementById('orderStatusFilter');
+const productDateFilter = document.getElementById('orderDateFilter');
+const exportProductsBtn = document.getElementById('exportOrdersBtn');
+
+// عنصر الجدول
+const productsTableContainer = document.getElementById('ordersTable'); // سيتم عرض المنتجات هنا
+
+
+// =================================================================
+// 2. دالة بناء وعرض جدول المنتجات (Rendering)
+// =================================================================
+
+/**
+ * تبني هيكل جدول المنتجات وتضيف الصفوف داخله.
+ * @param {Array} products - قائمة المنتجات المراد عرضها.
+ */
+function renderProductsTable(products) {
+    if (products.length === 0) {
+        productsTableContainer.innerHTML = '<p class="info-message">لا توجد منتجات مطابقة لمعايير البحث.</p>';
+        return;
+    }
+
+    // بناء هيكل الجدول
+    let tableHTML = `
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>اسم المنتج</th>
+                    <th>السعر</th>
+                    <th>المخزون</th>
+                    <th>تاريخ الإضافة</th>
+                    <th>الحالة</th>
+                    <th>إجراءات</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+
+    // إضافة صفوف البيانات
+    products.forEach(product => {
+        const stockStatus = product.stock > 0 ? 'في المخزون' : 'نفد';
+        
+        tableHTML += `
+            <tr>
+                <td>#${product.id}</td>
+                <td>${product.name}</td>
+                <td>${product.price ? product.price.toFixed(2) + ' ر.س' : 'N/A'}</td>
+                <td>${product.stock}</td>
+                <td>${formatDate(product.created_at)}</td>
+                <td><span class="status-badge status-${stockStatus === 'نفد' ? 'cancelled' : 'delivered'}">${stockStatus}</span></td>
+                <td>
+                    <button class="btn-action view-btn" onclick="viewProductDetails('${product.id}')">
+                        <i class="fas fa-edit"></i> تعديل
+                    </button>
+                </td>
+            </tr>
+        `;
+    });
+
+    tableHTML += `
+            </tbody>
+        </table>
+    `;
+
+    productsTableContainer.innerHTML = tableHTML;
+}
+
+// دالة مساعدة لتنسيق التاريخ
+function formatDate(dateString) {
+    if (!dateString) return 'N/A';
+    const options = { year: 'numeric', month: 'short', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString('ar-SA', options);
+}
+
+
+// =================================================================
+// 3. دالة جلب المنتجات من Supabase وتطبيق الفلتر
+// =================================================================
+
+async function fetchProducts() {
+    productsTableContainer.innerHTML = '<div class="loading">جاري تحميل بيانات المنتجات...</div>';
+
+    const statusValue = productStatusFilter.value; // قيمة فلتر حالة الطلب
+    const dateValue = productDateFilter.value; // قيمة فلتر التاريخ
+
+    try {
+        let query = supabase
+            .from('products') // جدول المنتجات المطلوب
+            .select('*') // يتضمن created_at
+            .order('created_at', { ascending: false });
+
+        // تطبيق فلتر الحالة (نحول حالات الطلب إلى حالات مخزون افتراضية)
+        if (statusValue === 'قيد الانتظار' || statusValue === 'قيد التجهيز') {
+            // نعتبر هذه الحالات تعني "متوفر" (stock > 0)
+            query = query.gt('stock', 0);
+        } else if (statusValue === 'ملغي') {
+            // نعتبرها "نفد" (stock = 0)
+            query = query.eq('stock', 0);
+        }
+        
+        // تطبيق فلتر تاريخ الإضافة (created_at)
+        if (dateValue) {
+            const nextDay = new Date(dateValue);
+            nextDay.setDate(nextDay.getDate() + 1);
+
+            query = query
+                .gte('created_at', dateValue)
+                .lt('created_at', nextDay.toISOString().split('T')[0]);
+        }
+        
+        const { data: products, error } = await query;
+
+        if (error) {
+            throw error;
+        }
+
+        renderProductsTable(products);
+    } catch (error) {
+        console.error("خطأ في جلب المنتجات:", error.message);
+        productsTableContainer.innerHTML = `<div class="error-message">حدث خطأ أثناء تحميل البيانات: ${error.message}</div>`;
+    }
+}
+
+
+// =================================================================
+// 4. وظيفة تصدير المنتجات (Export)
+// =================================================================
+
+async function exportProducts() {
+    if (!confirm("هل تريد تصدير المنتجات الحالية المعروضة كملف CSV؟")) {
+        return;
+    }
+    
+    // **ملاحظة:** يجب إعادة جلب البيانات هنا لتصديرها بالفلتر الحالي
+
+    alert("بدء عملية تصدير المنتجات. يجب تكرار منطق جلب البيانات لضمان تصدير البيانات المفلترة فقط.");
+    // (يجب إضافة منطق تحويل JSON إلى CSV هنا)
+}
+
+
+// =================================================================
+// 5. ربط الأحداث والتشغيل
+// =================================================================
+
+// عند تغيير الفلتر -> إعادة تحميل المنتجات
+productStatusFilter.addEventListener('change', fetchProducts);
+productDateFilter.addEventListener('change', fetchProducts);
+
+// عند الضغط على زر التصدير
+exportProductsBtn.addEventListener('click', exportProducts);
+
+// تحميل المنتجات عند تحميل الصفحة لأول مرة
+document.addEventListener('DOMContentLoaded', fetchProducts);
+    </script>
+</body>
+</html>

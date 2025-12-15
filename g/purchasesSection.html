@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام إدارة المتجر - لوحة التحكم</title>
+    <link rel="stylesheet" href="admin-styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <section id="purchasesSection" class="section-content">
+        <div class="table-container">
+            <div class="table-header">
+                <h2><i class="fas fa-file-invoice-dollar"></i> إدارة المشتريات والفواتير</h2>
+                <div class="table-actions">
+                    <button class="btn btn-primary" id="addPurchaseBtn">
+                        <i class="fas fa-plus"></i> إضافة فاتورة
+                    </button>
+                    <button class="btn btn-success" id="printInvoicesBtn">
+                        <i class="fas fa-print"></i> طباعة الفواتير
+                    </button>
+                </div>
+            </div>
+            <div id="purchasesTable">
+                <div class="loading">جاري تحميل بيانات المشتريات...</div>
+            </div>
+        </div>
+    </section>
+    <div id="purchasesTable">
+        <div class="loading">جاري تحميل بيانات المشتريات...</div>
+    </div>
+</div>
+</section>
+
+<div id="addInvoiceModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3><i class="fas fa-file-invoice"></i> إضافة فاتورة جديدة</h3>
+            <button class="close-modal-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="invoiceForm">
+                <div class="form-row">
+                    </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> حفظ الفاتورة
+                    </button>
+                    <button type="button" class="btn btn-danger close-modal-btn">
+                        <i class="fas fa-times"></i> إلغاء
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="invoicePreviewModal" class="modal" style="display:none;">
+    <div class="modal-content" style="max-width: 900px;">
+        <div class="modal-header">
+            <h3><i class="fas fa-file-invoice"></i> معاينة الفاتورة</h3>
+            <div>
+                <button class="btn btn-success" onclick="printInvoice()">
+                    <i class="fas fa-print"></i> طباعة
+                </button>
+                <button class="btn btn-primary" onclick="downloadInvoice()">
+                    <i class="fas fa-download"></i> تحميل PDF
+                </button>
+                <button class="close-modal-btn">&times;</button>
+            </div>
+        </div>
+        <div class="modal-body">
+            <div id="invoicePreviewContent"></div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script>
+  // =================================================================
+// العناصر الأساسية
+// =================================================================
+
+const addPurchaseBtn = document.getElementById('addPurchaseBtn');
+const printInvoicesBtn = document.getElementById('printInvoicesBtn');
+
+// عناصر Modal إضافة الفاتورة
+const addInvoiceModal = document.getElementById('addInvoiceModal');
+const invoiceForm = document.getElementById('invoiceForm');
+const closeButtons = document.querySelectorAll('.close-modal-btn'); // استخدام كلاس موحد لجميع أزرار الإغلاق
+
+
+// =================================================================
+// وظيفة 1: إضافة فاتورة جديدة (Modal Control)
+// =================================================================
+
+/**
+ * إظهار النافذة المنبثقة لإضافة فاتورة.
+ */
+function openAddInvoiceModal() {
+    addInvoiceModal.style.display = 'block';
+    // *هنا يمكنك إضافة دالة لجلب الموردين من Supabase لملء حقل "اختر المورد"*
+    // loadSupplierOptions(); 
+}
+
+/**
+ * إخفاء النافذة المنبثقة لإضافة فاتورة.
+ */
+function closeAddInvoiceModal() {
+    addInvoiceModal.style.display = 'none';
+    invoiceForm.reset(); // تفريغ حقول النموذج
+}
+
+// ربط الزر بفتح النافذة
+addPurchaseBtn.addEventListener('click', openAddInvoiceModal);
+
+// ربط أزرار الإغلاق (X وزر إلغاء)
+closeButtons.forEach(button => {
+    button.addEventListener('click', closeAddInvoiceModal);
+});
+
+// إغلاق عند النقر خارج النافذة
+window.addEventListener('click', (event) => {
+    if (event.target === addInvoiceModal) {
+        closeAddInvoiceModal();
+    }
+});
+
+// معالج إرسال النموذج (Submit)
+invoiceForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    
+    // **1. هنا يجب استدعاء دالة إرسال البيانات إلى Supabase.**
+    // saveInvoiceToDatabase(new FormData(invoiceForm)); 
+
+    alert('تم التقاط بيانات الفاتورة بنجاح. سيتم حفظها الآن.');
+    closeAddInvoiceModal();
+});
+
+
+// =================================================================
+// وظيفة 2: طباعة وتحميل الفواتير كـ PDF
+// =================================================================
+
+/**
+ * يتم استدعاؤها عند الضغط على زر "طباعة الفواتير".
+ */
+function handlePrintInvoices() {
+    // 1. افتراض أن الفواتير المعروضة في الجدول يمكن تحديدها باستخدام خانات اختيار (Checkboxes)
+    const selectedInvoiceIds = getSelectedInvoiceIds(); 
+    
+    if (selectedInvoiceIds.length === 0) {
+        alert("يرجى تحديد فاتورة واحدة على الأقل لطباعتها أو تحميلها.");
+        return;
+    }
+
+    // 2. طلب التحميل من المستخدم
+    const confirmDownload = confirm(`سيتم تحميل ${selectedInvoiceIds.length} فاتورة محددة بصيغة PDF. هل تريد المتابعة؟`);
+
+    if (confirmDownload) {
+        downloadInvoicesAsPdf(selectedInvoiceIds);
+    }
+}
+
+// دالة وهمية لجمع IDs الفواتير المحددة (تحتاج لتعديلها حسب هيكل الجدول الخاص بك)
+function getSelectedInvoiceIds() {
+    // **ملاحظة هامة:** يجب أن يكون لديك Checkboxes في جدولك لتحقيق "تحديد الفواتير المراد تحميلها".
+    // هذا مجرد مثال على مصفوفة IDs:
+    // return Array.from(document.querySelectorAll('#purchasesTable input[type="checkbox"]:checked'))
+    //     .map(cb => cb.dataset.invoiceId);
+        
+    // نرجع مصفوفة وهمية للتجربة
+    return ['INV-001', 'INV-002', 'INV-003']; 
+}
+
+/**
+ * دالة افتراضية لتحويل الفواتير المحددة إلى ملف PDF وتحميله.
+ * **تحتاج هذه الوظيفة إلى مكتبة مثل jsPDF أو html2canvas للعمل.**
+ * @param {Array<string>} invoiceIds - قائمة IDs الفواتير المراد تحميلها.
+ */
+function downloadInvoicesAsPdf(invoiceIds) {
+    console.log(`جارٍ إعداد وتحميل الفواتير التالية كملف PDF: ${invoiceIds.join(', ')}`);
+    
+    // **إذا كنت تستخدم مكتبة jsPDF:**
+    // 1. جلب بيانات كل فاتورة من Supabase باستخدام الـ IDs.
+    // 2. تصميم وإنشاء صفحات PDF بناءً على البيانات.
+    // 3. doc.save('Invoices.pdf');
+    
+    alert("تم طلب ملف PDF بنجاح. يرجى إضافة مكتبة jsPDF أو ربط هذه الدالة بخدمة خلفية (Backend API) لإنشاء ملفات PDF.");
+}
+
+// ربط الزر بتنفيذ وظيفة الطباعة/التحميل
+printInvoicesBtn.addEventListener('click', handlePrintInvoices);
+
+</script>
+</body>
+</html>

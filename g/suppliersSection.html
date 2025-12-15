@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام إدارة المتجر - لوحة التحكم</title>
+    <link rel="stylesheet" href="admin-styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <section id="suppliersSection" class="section-content">
+        <div class="table-container">
+            <div class="table-header">
+                <h2><i class="fas fa-truck"></i> إدارة الموردين</h2>
+                <div class="table-actions">
+                    <div class="search-bar">
+                        <input type="text" id="supplierSearch" placeholder="بحث عن مورد...">
+                        <button><i class="fas fa-search"></i></button>
+                    </div>
+                    <button class="btn btn-primary" id="addSupplierBtn">
+                        <i class="fas fa-plus"></i> إضافة مورد
+                    </button>
+                </div>
+            </div>
+            <div id="suppliersTable">
+                <div class="loading">جاري تحميل بيانات الموردين...</div>
+            </div>
+        </div>
+    </section>
+    <div id="suppliersTable">
+                <div class="loading">جاري تحميل بيانات الموردين...</div>
+            </div>
+        </div>
+    </section>
+
+<div id="addSupplierModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3><i class="fas fa-user-tie"></i> إضافة مورد جديد</h3>
+            <button class="close-modal-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="supplierForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="supplierName">اسم المورد (أو الشركة) *</label>
+                        <input type="text" id="supplierName" name="supplierName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="supplierPhone">رقم الهاتف *</label>
+                        <input type="tel" id="supplierPhone" name="supplierPhone" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="supplierEmail">البريد الإلكتروني</label>
+                        <input type="email" id="supplierEmail" name="supplierEmail">
+                    </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> حفظ المورد
+                    </button>
+                    <button type="button" class="btn btn-danger close-modal-btn">
+                        <i class="fas fa-times"></i> إلغاء
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script>
+  // =================================================================
+// العناصر الأساسية والتهيئة
+// =================================================================
+
+// تأكد من تهيئة Supabase في ملف supabase-config.js
+// يفترض أن المتغير `supabase` متاح هنا.
+
+const addSupplierBtn = document.getElementById('addSupplierBtn');
+const addSupplierModal = document.getElementById('addSupplierModal');
+const supplierForm = document.getElementById('supplierForm');
+const closeButtons = document.querySelectorAll('.close-modal-btn');
+
+
+// =================================================================
+// وظائف التحكم بالـ Modal
+// =================================================================
+
+/**
+ * إظهار النافذة المنبثقة لإضافة مورد.
+ */
+function openAddSupplierModal() {
+    addSupplierModal.style.display = 'block';
+}
+
+/**
+ * إخفاء النافذة المنبثقة لإضافة مورد.
+ */
+function closeAddSupplierModal() {
+    addSupplierModal.style.display = 'none';
+    supplierForm.reset(); // تفريغ حقول النموذج
+}
+
+// ربط الزر بفتح النافذة
+addSupplierBtn.addEventListener('click', openAddSupplierModal);
+
+// ربط أزرار الإغلاق (X وزر إلغاء)
+closeButtons.forEach(button => {
+    button.addEventListener('click', closeAddSupplierModal);
+});
+
+// إغلاق عند النقر خارج النافذة
+window.addEventListener('click', (event) => {
+    if (event.target === addSupplierModal) {
+        closeAddSupplierModal();
+    }
+});
+
+
+// =================================================================
+// وظيفة معالجة إضافة المورد (Supabase Integration)
+// =================================================================
+
+async function saveSupplierToDatabase(supplierData) {
+    // 1. إضافة حقل created_at
+    const newSupplier = {
+        ...supplierData,
+        created_at: new Date().toISOString() // إضافة الوقت الحالي بصيغة ISO
+    };
+
+    console.log("بيانات المورد المراد إرسالها:", newSupplier);
+    
+    try {
+        // 2. إرسال البيانات إلى جدول 'suppliers' في Supabase
+        const { data, error } = await supabase
+            .from('suppliers')
+            .insert([newSupplier])
+            .select(); // لجلب البيانات المدرجة حديثاً
+
+        if (error) {
+            throw error;
+        }
+
+        alert(`تم إضافة المورد بنجاح: ${data[0].name}`);
+        // *يمكنك هنا استدعاء دالة تحديث الجدول لعرض المورد الجديد*
+        // fetchSuppliers(); 
+        
+    } catch (error) {
+        console.error("خطأ في إضافة المورد:", error.message);
+        alert(`فشل في إضافة المورد: ${error.message}`);
+    }
+}
+
+
+// =================================================================
+// معالج إرسال النموذج (Form Submission)
+// =================================================================
+
+supplierForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    
+    // جمع البيانات من النموذج
+    const formData = new FormData(supplierForm);
+    const supplierData = {};
+    formData.forEach((value, key) => {
+        supplierData[key] = value;
+    });
+
+    // استدعاء دالة الحفظ
+    saveSupplierToDatabase(supplierData);
+
+    // إغلاق النافذة بعد الإرسال (سواء نجح أو فشل)
+    closeAddSupplierModal();
+});
+
+</script>
+</body>
+</html>

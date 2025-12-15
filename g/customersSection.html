@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام إدارة المتجر - لوحة التحكم</title>
+    <link rel="stylesheet" href="admin-styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <section id="customersSection" class="section-content">
+        <div class="table-container">
+            <div class="table-header">
+                <h2><i class="fas fa-users"></i> إدارة العملاء</h2>
+                <div class="table-actions">
+                    <div class="search-bar">
+                        <input type="text" id="customerSearch" placeholder="بحث عن عميل...">
+                        <button><i class="fas fa-search"></i></button>
+                    </div>
+                    <button class="btn btn-primary" id="addCustomerBtn">
+                        <i class="fas fa-user-plus"></i> إضافة عميل
+                    </button>
+                </div>
+            </div>
+            <div id="customersTable">
+                <div class="loading">جاري تحميل بيانات العملاء...</div>
+            </div>
+        </div>
+    </section>
+    <div id="customersTable">
+                <div class="loading">جاري تحميل بيانات العملاء...</div>
+            </div>
+        </div>
+    </section>
+
+<div id="addCustomerModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3><i class="fas fa-user-plus"></i> إضافة عميل جديد</h3>
+            <button class="close-modal-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="customerForm">
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="customerName">الاسم الكامل *</label>
+                        <input type="text" id="customerName" name="full_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="customerEmail">البريد الإلكتروني *</label>
+                        <input type="email" id="customerEmail" name="email" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="customerPhone">رقم الهاتف</label>
+                        <input type="tel" id="customerPhone" name="phone">
+                    </div>
+                    <div class="form-group">
+                        <label for="customerAddress">العنوان الافتراضي</label>
+                        <input type="text" id="customerAddress" name="address">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <label for="customerNotes">ملاحظات إضافية</label>
+                        <textarea id="customerNotes" name="notes" rows="3"></textarea>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> حفظ العميل
+                    </button>
+                    <button type="button" class="btn btn-danger close-modal-btn">
+                        <i class="fas fa-times"></i> إلغاء
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script>
+  // =================================================================
+// 1. العناصر الأساسية
+// =================================================================
+
+// يفترض أن المتغير `supabase` متاح هنا من ملف supabase-config.js
+
+const addCustomerBtn = document.getElementById('addCustomerBtn');
+const addCustomerModal = document.getElementById('addCustomerModal');
+const customerForm = document.getElementById('customerForm');
+const closeButtons = document.querySelectorAll('.close-modal-btn');
+
+
+// =================================================================
+// 2. وظائف التحكم بالـ Modal
+// =================================================================
+
+/**
+ * إظهار النافذة المنبثقة لإضافة عميل.
+ */
+function openAddCustomerModal() {
+    addCustomerModal.style.display = 'block';
+}
+
+/**
+ * إخفاء النافذة المنبثقة لإضافة عميل.
+ */
+function closeAddCustomerModal() {
+    addCustomerModal.style.display = 'none';
+    customerForm.reset(); // تفريغ حقول النموذج
+}
+
+// ربط الزر بفتح النافذة
+addCustomerBtn.addEventListener('click', openAddCustomerModal);
+
+// ربط أزرار الإغلاق (X وزر إلغاء)
+closeButtons.forEach(button => {
+    button.addEventListener('click', closeAddCustomerModal);
+});
+
+// إغلاق عند النقر خارج النافذة
+window.addEventListener('click', (event) => {
+    if (event.target === addCustomerModal) {
+        closeAddCustomerModal();
+    }
+});
+
+
+// =================================================================
+// 3. وظيفة معالجة إضافة العميل (Supabase Integration)
+// =================================================================
+
+/**
+ * تقوم بإضافة العميل إلى جدول 'profiles' في قاعدة البيانات مع تسجيل وقت الإنشاء.
+ * @param {object} customerData - بيانات العميل.
+ */
+async function saveCustomerToDatabase(customerData) {
+    // 1. إضافة حقل created_at
+    const newCustomer = {
+        ...customerData,
+        // ملاحظة: يتم تسمية العمود في Supabase عادةً بـ 'created_at' أو 'inserted_at'
+        created_at: new Date().toISOString() // تسجيل الوقت الحالي
+    };
+
+    console.log("بيانات العميل المراد إرسالها إلى profiles:", newCustomer);
+    
+    try {
+        // 2. إرسال البيانات إلى جدول 'profiles'
+        const { data, error } = await supabase
+            .from('profiles') // اسم الجدول المطلوب
+            .insert([newCustomer])
+            .select();
+
+        if (error) {
+            throw error;
+        }
+
+        alert(`تم إضافة العميل بنجاح: ${data[0].full_name || data[0].email}`);
+        // *يمكنك هنا استدعاء دالة تحديث الجدول لعرض العميل الجديد*
+        // fetchCustomers(); 
+        
+    } catch (error) {
+        console.error("خطأ في إضافة العميل:", error.message);
+        alert(`فشل في إضافة العميل: ${error.message}`);
+    }
+}
+
+
+// =================================================================
+// 4. معالج إرسال النموذج (Form Submission)
+// =================================================================
+
+customerForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    
+    // جمع البيانات من النموذج
+    const formData = new FormData(customerForm);
+    const customerData = {};
+    formData.forEach((value, key) => {
+        customerData[key] = value;
+    });
+
+    // استدعاء دالة الحفظ
+    saveCustomerToDatabase(customerData);
+
+    // إغلاق النافذة
+    closeAddCustomerModal();
+});
+
+</script>
+</body>
+</html>

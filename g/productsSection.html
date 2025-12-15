@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم</title>
+    <link rel="stylesheet" href="admin-styles.css">
+</head>
+<body>
+    <section id="productsSection" class="section-content">
+        <div class="table-container">
+            <div class="table-header">
+                <h2><i class="fas fa-box"></i> إدارة المنتجات</h2>
+                <div class="table-actions">
+                    <div class="search-bar">
+                        <input type="text" id="productSearch" placeholder="بحث عن منتج...">
+                        <button><i class="fas fa-search"></i></button>
+                    </div>
+                    <button class="btn btn-success" id="addRealProductBtn">
+                        <i class="fas fa-plus"></i> إضافة منتج حقيقي
+                    </button>
+                    <button class="btn btn-primary" id="addDigitalProductBtn">
+                        <i class="fas fa-plus"></i> إضافة منتج رقمي
+                    </button>
+                </div>
+            </div>
+            <div id="productsTable">
+                <div class="loading">جاري تحميل بيانات المنتجات...</div>
+            </div>
+        </div>
+    </section>
+    <div id="addProductModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="modalTitle"><i class="fas fa-plus"></i> إضافة منتج جديد</h3> 
+            <button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="productForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="productName">اسم المنتج *</label>
+                        <input type="text" id="productName" name="productName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productCategory">القسم *</label>
+                        <select id="productCategory" name="productCategory" required>
+                            <option value="">اختر القسم</option>
+                            </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="productSKU">كود المنتج (SKU)</label>
+                        <input type="text" id="productSKU" name="productSKU">
+                    </div>
+                    <div class="form-group">
+                        <label for="productBarcode">الباركود</label>
+                        <input type="text" id="productBarcode" name="productBarcode">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="buyPrice">سعر الشراء (ر.س) *</label>
+                        <input type="number" id="buyPrice" name="buyPrice" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="sellPrice">سعر البيع (ر.س) *</label>
+                        <input type="number" id="sellPrice" name="sellPrice" step="0.01" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="quantity">الكمية *</label>
+                        <input type="number" id="quantity" name="quantity" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="unit">الوحدة</label>
+                        <select id="unit" name="unit">
+                            <option value="">اختر الوحدة</option>
+                            </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="supplier">المورد</label>
+                        <select id="supplier" name="supplier">
+                            <option value="">اختر المورد</option>
+                            </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="productWeight">الوزن (كجم)</label>
+                        <input type="number" id="productWeight" name="productWeight" step="0.01">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="imageUrl">رابط الصورة</label>
+                        <input type="text" id="imageUrl" name="imageUrl" placeholder="https://example.com/image.jpg">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="productDescription">الوصف</label>
+                        <textarea id="productDescription" name="productDescription" rows="4"></textarea>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> حفظ المنتج
+                    </button>
+                    <button type="button" class="btn btn-danger close-modal-btn">
+                        <i class="fas fa-times"></i> إلغاء
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="orderDetailsModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3><i class="fas fa-shopping-cart"></i> تفاصيل الطلب</h3>
+            <button class="close-modal-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div id="orderDetailsContent">
+                <div class="loading">جاري تحميل تفاصيل الطلب...</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="admin-functions.js"></script>
+</body>
+</html>
