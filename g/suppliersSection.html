@@ -141,7 +141,7 @@ async function saveSupplierToDatabase(supplierData) {
         const { data, error } = await supabase
             .from('suppliers')
             .insert([newSupplier])
-            .select(); // لجلب البيانات المدرجة حديثاً
+            .select(id, name, phone, email, created_at); // لجلب البيانات المدرجة حديثاً
 
         if (error) {
             throw error;
@@ -162,8 +162,11 @@ async function saveSupplierToDatabase(supplierData) {
 // معالج إرسال النموذج (Form Submission)
 // =================================================================
 
-supplierForm.addEventListener('submit', (event) => {
+ supplierForm.addEventListener('submit', (event) => {
     event.preventDefault();
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('phone').value;
+    const message = document.getElementById('email').value;
     
     // جمع البيانات من النموذج
     const formData = new FormData(supplierForm);
@@ -182,3 +185,4 @@ supplierForm.addEventListener('submit', (event) => {
 </script>
 </body>
 </html>
+
