@@ -165,8 +165,8 @@ async function saveSupplierToDatabase(supplierData) {
  supplierForm.addEventListener('submit', (event) => {
     event.preventDefault();
     const name = document.getElementById('name').value;
-    const email = document.getElementById('phone').value;
-    const message = document.getElementById('email').value;
+    const phone = document.getElementById('phone').value;
+    const email = document.getElementById('email').value;
     
     // جمع البيانات من النموذج
     const formData = new FormData(supplierForm);
@@ -185,4 +185,5 @@ async function saveSupplierToDatabase(supplierData) {
 </script>
 </body>
 </html>
+
 
