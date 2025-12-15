@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام إدارة المتجر - لوحة التحكم</title>
+    <link rel="stylesheet" href="admin-styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <section id="reportsSection" class="section-content">
+        <div class="table-container">
+            <div class="table-header">
+                <h2><i class="fas fa-chart-bar"></i> التقارير والإحصائيات</h2>
+                <div class="table-actions">
+                    <div class="filter-group">
+                        <input type="date" id="reportStartDate">
+                        <span>إلى</span>
+                        <input type="date" id="reportEndDate">
+                    </div>
+                    <button class="btn btn-success" id="generateReportBtn">
+                        <i class="fas fa-filter"></i> تطبيق الفلتر
+                    </button>
+                </div>
+            </div>
+            
+            <div class="tabs">
+                <button class="tab active" data-tab="sales">مبيعات</button>
+                <button class="tab" data-tab="products">منتجات</button>
+                <button class="tab" data-tab="customers">عملاء</button>
+                <button class="tab" data-tab="profitability">ربحية</button>
+            </div>
+            
+            <div class="tab-content active" id="salesTab">
+                <div class="chart-container">
+                    <canvas id="reportChart"></canvas>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon gradient-1">
+                            <i class="fas fa-money-bill-wave"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="reportTotalSales">0 ر.س</h3>
+                            <p>إجمالي المبيعات</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon gradient-2">
+                            <i class="fas fa-cart-plus"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="reportOrderCount">0</h3>
+                            <p>عدد الطلبات</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon gradient-3">
+                            <i class="fas fa-box"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="reportProductCount">0</h3>
+                            <p>عدد المنتجات المباعة</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon gradient-4">
+                            <i class="fas fa-user-check"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="reportCustomerCount">0</h3>
+                            <p>عدد العملاء</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="productsTab">
+                <div id="productsReport">
+                    <div class="loading">جاري تحميل تقرير المنتجات...</div>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="customersTab">
+                <div id="customersReport">
+                    <div class="loading">جاري تحميل تقرير العملاء...</div>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="profitabilityTab">
+                <div id="profitabilityReport">
+                    <div class="loading">جاري تحميل تقرير الربحية...</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script>
+      // =================================================================
+// وظيفة التنقل بين علامات التبويب (Tabs Navigation)
+// =================================================================
+
+// 1. الحصول على جميع عناصر الأزرار وعناصر المحتوى
+const tabButtons = document.querySelectorAll('.tabs .tab');
+const tabContents = document.querySelectorAll('.section-content .tab-content');
+
+/**
+ * دالة لمعالجة النقر على علامة تبويب.
+ * @param {Event} event - حدث النقر.
+ */
+function handleTabClick(event) {
+    const clickedButton = event.currentTarget; // الزر الذي تم النقر عليه
+    const targetTabId = clickedButton.getAttribute('data-tab') + 'Tab'; // مثال: 'sales' -> 'salesTab'
+
+    // 1. إزالة فئة 'active' من جميع أزرار التبويب
+    tabButtons.forEach(button => {
+        button.classList.remove('active');
+    });
+
+    // 2. إزالة فئة 'active' من جميع محتويات التبويب
+    tabContents.forEach(content => {
+        content.classList.remove('active');
+    });
+
+    // 3. إضافة فئة 'active' للزر الذي تم النقر عليه
+    clickedButton.classList.add('active');
+
+    // 4. إظهار محتوى التبويب المستهدف (إضافة فئة 'active')
+    const targetContent = document.getElementById(targetTabId);
+    if (targetContent) {
+        targetContent.classList.add('active');
+    }
+    
+    // 5. (اختياري) تشغيل دالة خاصة بالتقرير المحدد (مثل جلب البيانات أو إعادة رسم المخطط)
+    // runReportFunction(targetTabId); 
+}
+
+// 2. ربط معالج الحدث (Event Listener) بجميع أزرار التبويب
+tabButtons.forEach(button => {
+    button.addEventListener('click', handleTabClick);
+});
+
+
+// =================================================================
+// وظائف إضافية (مطلوبة لتجربة المبيعات)
+// =================================================================
+
+// ملاحظة: لكي يعمل مخطط Chart.js، يجب أن تكون هذه الدالة جاهزة:
+
+// متغير لتخزين مخطط Chart.js
+let reportChartInstance = null;
+const reportChartCanvas = document.getElementById('reportChart');
+
+/**
+ * دالة وهمية لجلب بيانات التقرير (ستستبدل لاحقاً ببيانات Supabase).
+ * @param {string} tabId - محتوى التبويب النشط.
+ */
+function fetchReportData(tabId) {
+    // هذه مجرد بيانات وهمية للمبيعات
+    if (tabId === 'salesTab') {
+        return {
+            totalSales: '45,200',
+            orderCount: 155,
+            productCount: 480,
+            customerCount: 95,
+            chartData: [12000, 15000, 8000, 10200],
+            chartLabels: ['يناير', 'فبراير', 'مارس', 'أبريل']
+        };
+    }
+    return null;
+}
+
+/**
+ * تحديث واجهة المستخدم لتقرير المبيعات.
+ * @param {Object} data - بيانات التقرير.
+ */
+function updateSalesUI(data) {
+    document.getElementById('reportTotalSales').textContent = data.totalSales + ' $';
+    document.getElementById('reportOrderCount').textContent = data.orderCount;
+    document.getElementById('reportProductCount').textContent = data.productCount;
+    document.getElementById('reportCustomerCount').textContent = data.customerCount;
+
+    // تحديث أو إنشاء مخطط Chart.js
+    if (reportChartInstance) {
+        reportChartInstance.destroy(); // حذف المخطط القديم قبل إنشاء الجديد
+    }
+
+    reportChartInstance = new Chart(reportChartCanvas, {
+        type: 'bar',
+        data: {
+            labels: data.chartLabels,
+            datasets: [{
+                label: 'إجمالي المبيعات ($)',
+                data: data.chartData,
+                backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+}
+
+// دالة لتشغيل وظيفة التقرير المناسبة عند التبديل أو الفلترة
+function runReportFunction(tabId) {
+    const data = fetchReportData(tabId);
+    
+    // يتم توسيع هذا الكود ليشمل جميع علامات التبويب (productsTab, customersTab, ...)
+    if (tabId === 'salesTab' && data) {
+        updateSalesUI(data);
+    } else {
+        // إظهار رسالة التحميل في الأقسام الأخرى التي لا تحتوي على بيانات بعد
+        const contentDiv = document.getElementById(tabId);
+        if (contentDiv) {
+             contentDiv.innerHTML = '<div class="loading">جاري تحميل بيانات التقرير...</div>';
+        }
+    }
+}
+
+
+// =================================================================
+// التشغيل الأولي عند تحميل الصفحة
+// =================================================================
+
+document.addEventListener('DOMContentLoaded', () => {
+    // تشغيل دالة التقرير الافتراضية لعلامة تبويب "مبيعات" عند تحميل الصفحة
+    runReportFunction('salesTab'); 
+});
+
+    </script>
+</body>
+</html>

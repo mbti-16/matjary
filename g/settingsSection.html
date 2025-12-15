@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام إدارة المتجر - لوحة التحكم</title>
+    <link rel="stylesheet" href="admin-styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <section id="settingsSection" class="section-content">
+        <div class="form-container">
+            <h2><i class="fas fa-cog"></i> الإعدادات العامة</h2>
+            <form id="settingsForm">
+                <div class="tabs">
+                    <button type="button" class="tab active" data-tab="general">عام</button>
+                    <button type="button" class="tab" data-tab="payment">الدفع</button>
+                    <button type="button" class="tab" data-tab="shipping">الشحن</button>
+                    <button type="button" class="tab" data-tab="notifications">التنبيهات</button>
+                </div>
+                
+                <div class="tab-content active" id="generalTab">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="storeName">اسم المتجر *</label>
+                            <input type="text" id="storeName" name="storeName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="storeEmail">البريد الإلكتروني *</label>
+                            <input type="email" id="storeEmail" name="storeEmail" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="storePhone">رقم الهاتف</label>
+                            <input type="tel" id="storePhone" name="storePhone">
+                        </div>
+                        <div class="form-group">
+                            <label for="storeAddress">العنوان</label>
+                            <input type="text" id="storeAddress" name="storeAddress">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="defaultCurrency">العملة الافتراضية</label>
+                            <select id="defaultCurrency" name="defaultCurrency">
+                                <option value="SAR">ريال سعودي (ر.س)</option>
+                                <option value="USD">دولار أمريكي ($)</option>
+                                <option value="EUR">يورو (€)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="timezone">المنطقة الزمنية</label>
+                            <select id="timezone" name="timezone">
+                                <option value="Asia/Riyadh">الرياض (UTC+3)</option>
+                                <option value="Asia/Dubai">دبي (UTC+4)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="paymentTab">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="mastercardEnabled" name="mastercardEnabled">
+                                تفعيل ماستر كارد / فيزا
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="madaEnabled" name="madaEnabled">
+                                تفعيل مدى
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="paypalEnabled" name="paypalEnabled">
+                                تفعيل باي بال
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="applePayEnabled" name="applePayEnabled">
+                                تفعيل أبل باي
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="codEnabled" name="codEnabled" checked>
+                                تفعيل الدفع عند الاستلام
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label for="codLimit">حد الدفع عند الاستلام (ر.س)</label>
+                            <input type="number" id="codLimit" name="codLimit" value="5000">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="shippingTab">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="shippingFee">رسوم الشحن الثابتة (ر.س)</label>
+                            <input type="number" id="shippingFee" name="shippingFee" step="0.01" value="15.00">
+                        </div>
+                        <div class="form-group">
+                            <label for="freeShippingThreshold">الحد الأدنى للشحن المجاني (ر.س)</label>
+                            <input type="number" id="freeShippingThreshold" name="freeShippingThreshold" value="200.00">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="shippingTime">مدة التوصيل (أيام)</label>
+                            <input type="number" id="shippingTime" name="shippingTime" value="3">
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="expressShippingEnabled" name="expressShippingEnabled">
+                                تفعيل الشحن السريع
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="expressShippingFee">رسوم الشحن السريع (ر.س)</label>
+                            <input type="number" id="expressShippingFee" name="expressShippingFee" value="30.00">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="notificationsTab">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="lowStockThreshold">حد تنبيه المخزون المنخفض</label>
+                            <input type="number" id="lowStockThreshold" name="lowStockThreshold" value="5">
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="emailNotifications" name="emailNotifications" checked>
+                                إشعارات البريد الإلكتروني
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="smsNotifications" name="smsNotifications">
+                                إشعارات الرسائل القصيرة
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="pushNotifications" name="pushNotifications">
+                                إشعارات الدفع
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> حفظ الإعدادات
+                    </button>
+                    <button type="button" class="btn btn-danger" id="resetSettingsBtn">
+                        <i class="fas fa-undo"></i> استعادة الافتراضي
+                    </button>
+                </div>
+            </form>
+        </div>
+    </section>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script>
+      // =================================================================
+// 1. العناصر الأساسية
+// =================================================================
+
+// يفترض أن المتغير `supabase` متاح هنا من ملف supabase-config.js
+
+const settingsForm = document.getElementById('settingsForm');
+const tabs = document.querySelectorAll('#settingsSection .tabs .tab');
+const tabContents = document.querySelectorAll('#settingsSection .tab-content');
+const saveButton = settingsForm.querySelector('button[type="submit"]');
+const resetButton = document.getElementById('resetSettingsBtn');
+
+// =================================================================
+// 2. وظيفة التحكم في علامات التبويب (Tabs Navigation)
+// =================================================================
+
+/**
+ * دالة للتبديل بين علامات التبويب وإظهار المحتوى المناسب.
+ * @param {string} tabName - اسم علامة التبويب المراد تفعيلها (general, payment, shipping, notifications).
+ */
+function switchTab(tabName) {
+    // 1. تحديث حالة أزرار التبويب (إضافة/إزالة كلاس active)
+    tabs.forEach(tab => {
+        if (tab.getAttribute('data-tab') === tabName) {
+            tab.classList.add('active');
+        } else {
+            tab.classList.remove('active');
+        }
+    });
+
+    // 2. تحديث محتوى التبويبات (إظهار/إخفاء)
+    tabContents.forEach(content => {
+        if (content.id === `${tabName}Tab`) {
+            content.classList.add('active');
+            content.style.display = 'block'; // إظهار
+        } else {
+            content.classList.remove('active');
+            content.style.display = 'none';  // إخفاء
+        }
+    });
+}
+
+// ربط وظيفة التبديل بأزرار التبويب
+tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+        const tabName = tab.getAttribute('data-tab');
+        switchTab(tabName);
+    });
+});
+
+
+// =================================================================
+// 3. وظيفة حفظ الإعدادات (Supabase Integration)
+// =================================================================
+
+/**
+ * تجمع البيانات من جميع حقول النموذج وتحفظها في Supabase.
+ */
+async function saveSettings(event) {
+    event.preventDefault();
+    saveButton.disabled = true;
+    saveButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الحفظ...';
+
+    // 1. جمع البيانات من النموذج
+    const formData = new FormData(settingsForm);
+    const settings = {};
+    
+    // تحتاج إلى معالجة خاصة لـ Checkboxes
+    formData.forEach((value, key) => {
+        // التحقق من أن القيمة ليست "on" (تأتي من checkboxes غير محددة)
+        if (settingsForm.elements[key].type === 'checkbox') {
+            settings[key] = settingsForm.elements[key].checked; // حفظ true/false
+        } else if (settingsForm.elements[key].type === 'number') {
+             // تحويل الأرقام إلى نوع رقمي
+             settings[key] = parseFloat(value);
+        }
+        else {
+            settings[key] = value;
+        }
+    });
+    
+    // 2. إرسال البيانات إلى Supabase
+    // يفترض أن لديك جدول إعدادات واحد اسمه 'settings'
+    // ونحن نقوم بتحديث الصف الذي يحمل ID = 1 (أو أي ID ثابت)
+    
+    try {
+        const { error } = await supabase
+            .from('settings')
+            .update(settings)
+            .eq('id', 1); // تحديث الصف الأول والوحيد للإعدادات
+
+        if (error) {
+            throw error;
+        }
+
+        alert('✅ تم حفظ الإعدادات بنجاح!');
+        
+    } catch (error) {
+        console.error('خطأ في حفظ الإعدادات:', error.message);
+        alert(`❌ فشل في حفظ الإعدادات: ${error.message}`);
+    } finally {
+        saveButton.disabled = false;
+        saveButton.innerHTML = '<i class="fas fa-save"></i> حفظ الإعدادات';
+    }
+}
+
+settingsForm.addEventListener('submit', saveSettings);
+
+
+// =================================================================
+// 4. وظيفة استعادة الافتراضي
+// =================================================================
+
+// القيم الافتراضية
+const DEFAULT_SETTINGS = {
+    // عام
+    storeName: "اسم المتجر الافتراضي",
+    storeEmail: "email@default.com",
+    storePhone: "",
+    storeAddress: "",
+    defaultCurrency: "SAR",
+    timezone: "Asia/Riyadh",
+
+    // الدفع
+    mastercardEnabled: false,
+    madaEnabled: false,
+    paypalEnabled: false,
+    applePayEnabled: false,
+    codEnabled: true,
+    codLimit: 5000,
+
+    // الشحن
+    shippingFee: 15.00,
+    freeShippingThreshold: 200.00,
+    shippingTime: 3,
+    expressShippingEnabled: false,
+    expressShippingFee: 30.00,
+
+    // التنبيهات
+    lowStockThreshold: 5,
+    emailNotifications: true,
+    smsNotifications: false,
+    pushNotifications: false,
+};
+
+
+/**
+ * استعادة جميع الحقول إلى قيمها الافتراضية.
+ */
+function resetToDefaults() {
+    if (!confirm("هل أنت متأكد من استعادة جميع الإعدادات إلى القيم الافتراضية؟")) {
+        return;
+    }
+
+    applySettingsToForm(DEFAULT_SETTINGS);
+    alert('تم استعادة الإعدادات الافتراضية بنجاح.');
+    
+    // *يمكنك أيضاً استدعاء saveSettings هنا لحفظ الافتراضيات في قاعدة البيانات فوراً*
+}
+
+resetButton.addEventListener('click', resetToDefaults);
+
+
+// =================================================================
+// 5. وظيفة تحميل الإعدادات الحالية عند بدء التشغيل
+// =================================================================
+
+/**
+ * تطبيق كائن الإعدادات على حقول النموذج.
+ */
+function applySettingsToForm(settings) {
+    for (const key in settings) {
+        const element = settingsForm.elements[key];
+        if (element) {
+            const value = settings[key];
+            if (element.type === 'checkbox') {
+                element.checked = value;
+            } else if (element.type === 'select-one' || element.type === 'text' || element.type === 'email' || element.type === 'tel' || element.type === 'number') {
+                element.value = value;
+            }
+        }
+    }
+}
+
+/**
+ * جلب الإعدادات الحالية من Supabase عند تحميل الصفحة.
+ */
+async function fetchCurrentSettings() {
+    try {
+        const { data, error } = await supabase
+            .from('settings')
+            .select('*')
+            .eq('id', 1)
+            .single(); // نتوقع صف واحد فقط
+
+        if (error && error.code !== 'PGRST116') { // PGRST116: لم يتم العثور على الصف
+            throw error;
+        }
+
+        if (data) {
+            applySettingsToForm(data);
+        } else {
+            // إذا لم يتم العثور على إعدادات، قم بتطبيق الافتراضيات
+            applySettingsToForm(DEFAULT_SETTINGS);
+        }
+        
+    } catch (error) {
+        console.error('خطأ في تحميل الإعدادات:', error.message);
+        alert('فشل في تحميل الإعدادات الحالية.');
+    }
+}
+
+// 6. التشغيل عند تحميل الصفحة
+document.addEventListener('DOMContentLoaded', () => {
+    // تأكد من تهيئة التبويبات عند التحميل الأولي
+    switchTab('general'); 
+    // جلب الإعدادات من قاعدة البيانات
+    fetchCurrentSettings();
+});
+
+    </script>
+</body>
+</html>

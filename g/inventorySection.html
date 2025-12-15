@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم</title>
+    <link rel="stylesheet" href="admin-styles.css">
+</head>
+<body>
+    <section id="inventorySection" class="section-content">
+        <div class="table-container">
+            <div class="table-header">
+                <h2><i class="fas fa-exclamation-triangle"></i> تنبيهات المخزون</h2>
+                <div class="table-actions">
+                    <select id="inventoryThreshold">
+                        <option value="5">أقل من 5 قطع</option>
+                        <option value="10">أقل من 10 قطع</option>
+                        <option value="20">أقل من 20 قطعة</option>
+                    </select>
+                    <button class="btn btn-warning" id="restockAllBtn">
+                        <i class="fas fa-boxes"></i> إعادة تخزين الكل
+                    </button>
+                </div>
+            </div>
+            <div class="alert alert-warning">
+                <i class="fas fa-info-circle"></i>
+                المنتجات التي تقل كميتها عن الحد المحدد تظهر في هذه القائمة
+            </div>
+            <div id="inventoryTable">
+                <div class="loading">جاري تحميل بيانات المخزون...</div>
+            </div>
+        </div>
+    </section>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script>
+      // =================================================================
+// 1. تعريف العناصر الأساسية
+// =================================================================
+
+// عناصر التحكم
+const inventoryThreshold = document.getElementById('inventoryThreshold');
+const restockAllBtn = document.getElementById('restockAllBtn');
+
+// عنصر الجدول
+const inventoryTableContainer = document.getElementById('inventoryTable');
+
+
+// =================================================================
+// 2. دالة بناء وعرض الجدول (Rendering)
+// =================================================================
+
+/**
+ * تبني هيكل جدول تنبيهات المخزون.
+ * @param {Array} products - قائمة المنتجات التي لديها مخزون منخفض.
+ * @param {number} threshold - الحد الأدنى لكمية المخزون المحدد.
+ */
+function renderInventoryTable(products, threshold) {
+    if (products.length === 0) {
+        inventoryTableContainer.innerHTML = `<p class="info-message">لا توجد منتجات لديها مخزون أقل من ${threshold} حالياً.</p>`;
+        return;
+    }
+
+    // بناء هيكل الجدول
+    let tableHTML = `
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" id="selectAllProducts"></th>
+                    <th>ID</th>
+                    <th>اسم المنتج</th>
+                    <th>القسم</th>
+                    <th>المخزون الحالي</th>
+                    <th>تنبيه عند</th>
+                    <th>إجراءات</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+
+    // إضافة صفوف البيانات
+    products.forEach(product => {
+        tableHTML += `
+            <tr data-product-id="${product.id}">
+                <td><input type="checkbox" class="product-checkbox"></td>
+                <td>#${product.id}</td>
+                <td>${product.name}</td>
+                <td>${product.category || 'غير محدد'}</td>
+                <td><span class="stock-low">${product.stock}</span></td>
+                <td>${threshold}</td>
+                <td>
+                    <button class="btn-action restock-btn" onclick="requestRestock('${product.id}', '${product.name}')">
+                        <i class="fas fa-truck-loading"></i> طلب إعادة تخزين
+                    </button>
+                </td>
+            </tr>
+        `;
+    });
+
+    tableHTML += `
+            </tbody>
+        </table>
+    `;
+
+    inventoryTableContainer.innerHTML = tableHTML;
+    
+    // ربط وظيفة تحديد الكل
+    const selectAllCheckbox = document.getElementById('selectAllProducts');
+    if (selectAllCheckbox) {
+        selectAllCheckbox.addEventListener('change', toggleAllCheckboxes);
+    }
+}
+
+
+// =================================================================
+// 3. دالة جلب المنتجات ذات المخزون المنخفض (Supabase Integration)
+// =================================================================
+
+async function fetchLowStockProducts() {
+    inventoryTableContainer.innerHTML = '<div class="loading">جاري تحميل بيانات المخزون...</div>';
+
+    // الحصول على قيمة الحد الأدنى من القائمة المنسدلة
+    const thresholdValue = parseInt(inventoryThreshold.value, 10);
+
+    try {
+        let query = supabase
+            .from('products') // جدول المنتجات
+            .select('*') 
+            .lte('stock', thresholdValue) // المنتجات التي يقل مخزونها أو يساويه عن الحد
+            .order('stock', { ascending: true }); // ترتيب حسب الأقل مخزوناً
+        
+        const { data: products, error } = await query;
+
+        if (error) {
+            throw error;
+        }
+
+        renderInventoryTable(products, thresholdValue);
+    } catch (error) {
+        console.error("خطأ في جلب تنبيهات المخزون:", error.message);
+        inventoryTableContainer.innerHTML = `<div class="error-message">حدث خطأ أثناء تحميل البيانات: ${error.message}</div>`;
+    }
+}
+
+// ربط فلتر الحد الأدنى بوظيفة الجلب
+inventoryThreshold.addEventListener('change', fetchLowStockProducts);
+
+
+// =================================================================
+// 4. وظائف الإجراءات الإضافية (Restock)
+// =================================================================
+
+/**
+ * دالة لتحديد/إلغاء تحديد جميع خانات الاختيار.
+ */
+function toggleAllCheckboxes(event) {
+    const isChecked = event.target.checked;
+    const checkboxes = document.querySelectorAll('.product-checkbox');
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = isChecked;
+    });
+}
+
+/**
+ * معالجة طلب إعادة تخزين منتج واحد.
+ * @param {string} productId - معرف المنتج.
+ * @param {string} productName - اسم المنتج.
+ */
+function requestRestock(productId, productName) {
+    if (confirm(`هل تريد تأكيد طلب إعادة تخزين المنتج: ${productName} (#${productId})؟`)) {
+        console.log(`تم إرسال طلب إعادة تخزين لـ: ${productId}`);
+        // **هنا يجب إضافة منطق: إما إنشاء طلب شراء جديد، أو تحديث حالة المخزون مؤقتاً.**
+        alert(`تم تسجيل طلب إعادة تخزين المنتج: ${productName}.`);
+    }
+}
+
+/**
+ * معالجة طلب إعادة تخزين جميع المنتجات المحددة.
+ */
+function restockAllSelected() {
+    const selectedCheckboxes = document.querySelectorAll('.product-checkbox:checked');
+    const selectedProductIds = Array.from(selectedCheckboxes).map(checkbox => 
+        checkbox.closest('tr').getAttribute('data-product-id')
+    );
+
+    if (selectedProductIds.length === 0) {
+        alert("يرجى تحديد منتج واحد على الأقل لإعادة تخزينه.");
+        return;
+    }
+
+    if (confirm(`هل أنت متأكد من إنشاء طلب إعادة تخزين جماعي لـ ${selectedProductIds.length} منتج؟`)) {
+        console.log("المنتجات المحددة لإعادة التخزين:", selectedProductIds);
+        
+        // **هنا يتم إرسال طلب جماعي إلى API أو جدول طلبات الشراء**
+        
+        alert(`تم إرسال طلب جماعي لإعادة تخزين ${selectedProductIds.length} منتج بنجاح!`);
+        
+        // إعادة تحميل الجدول بعد العملية
+        fetchLowStockProducts();
+    }
+}
+
+// ربط زر "إعادة تخزين الكل"
+restockAllBtn.addEventListener('click', restockAllSelected);
+
+
+// =================================================================
+// 5. التشغيل عند التحميل
+// =================================================================
+
+document.addEventListener('DOMContentLoaded', fetchLowStockProducts);
+    </script>
+</body>
+</html>
